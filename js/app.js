@@ -505,7 +505,6 @@ const app = new Vue({
                 // console.log('martes'+this.tabla['martes'])
                 // console.log('miercoles'+this.tabla['miercoles'])
                 // console.log('jueves'+this.tabla['jueves'])
-                // console.log('viernes'+this.tabla['viernes'])
            },
            selectTramoDia($dia, $tramo, $index){
             console.log("lo que trae al metodo selectTramoDia es: "+$dia+" "+$tramo+" "+$index );
