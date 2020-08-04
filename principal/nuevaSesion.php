@@ -35,6 +35,9 @@
 
         Grupo: {{selected}} Curso: {{curso}} Semestre: {{semestre}}
     </form>
+    <div class='d-flex justify-content-right' >
+        <label class='pt-4' for="">REGISTRO DE SESIONES</label>
+    </div>
 </nav>
 <!--/.Navbar -->
 
