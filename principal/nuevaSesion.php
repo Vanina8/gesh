@@ -45,53 +45,34 @@
 
 
                     <div class="col-4 m-1 border">
-                        <label class='pt-2'> <strong> Día y tramo</strong></label>      
-                                <!-- <div class="row"> -->
-                                        <!-- <div class='col-5'>
-                                            <label > <strong> Tramo </strong></label>      
-                                            <select v-model="selectedTramo" size='8' name="tramoElegido">
-                                                <option v-for="option in tramoshorario" v-bind:value="option.id">
-                                                    {{option.inicio}} 
-                                                </option>
-                                            </select>
-                                        </div>    -->
-                                        <!-- {{selectedTramo}} -->
-                                        <!-- <div class='col-2'>
-                                            <label > <strong> Lunes</strong></label>      
-                                            <select v-model="selected" name="lunes[]" multiple >
-                                                <option class="btn  blue-gradient btn-md" v-for="option in tabla['lunes']" v-bind:value="option.id">
-                                                        {{ option.id }}
-                                                </option>
-                                            </select>
-                                            {{selected}}
-                                        </div> -->
-                                        <!-- <label > <strong> Dias</strong></label>   -->
+                        <div class="col-12 d-block justify-content-center">
+                        
+                                        <nav class="navbar navbar-light mt-3">                                    
+                                            <label class='pt-2'> <strong> DÍA Y TRAMO</strong></label>  
+                                        </nav>                            
 
-                                        <div class='row col-12 pt-4  d-flex justify-content-center' >
-                                            <div class='col-2'>
-                                                 <label  > <strong> Lunes</strong></label>  
-                                            </div>
-                                            <div class='col-2'>
-                                                 <label class='text-center' > <strong> Martes</strong></label>  
-                                            </div>
-                                            <div class='col-2'>
-                                                 <label class='text-center' > <strong> Miercoles</strong></label>  
-                                            </div>
-                                            <div class='col-2'>
-                                                 <label class='text-center' > <strong> Jueves</strong></label>  
-                                            </div>
-                                            <div class='col-2'>
-                                                 <label class='text-center' > <strong> Viernes</strong></label>  
-                                            </div>
+                                        <div class='row col-12 pt-4  justify-content-center' >                                        
+                                            <nav class="navbar navbar-light "> 
+                                                <div class='col-2'>
+                                                    <label class='text-center'> <strong> Lunes</strong></label>  
+                                                </div>
+                                                <div class='col-2'>
+                                                    <label class='text-center' > <strong> Martes</strong></label>  
+                                                </div>
+                                                <div class='col-2'>
+                                                    <label class='text-center' > <strong> Miercoles</strong></label>  
+                                                </div>
+                                                <div class='col-2'>
+                                                    <label class='text-center' > <strong> Jueves</strong></label>  
+                                                </div>
+                                                <div class='col-2'>
+                                                    <label class='text-center' > <strong> Viernes</strong></label>  
+                                                </div>
+                                            </nav>
                                         </div>
+
                                         <div class='row col-12 d-flex justify-content-center' v-for="(item, index) in tramoshorario" id='horario' >
                                                                                                                                   
-                                            <!-- <div  > -->
-                                                <!-- <select v-model="selectedDias" name="dias" size='5' >
-                                                    <option v-for="option in diasSemana" v-bind:value="option[0]">
-                                                        {{option[1]}}
-                                                    </option>
-                                                </select> -->
                                                 <div class='col-2 text-center'>
                                                     <!-- <button  class="btn  p-3" v-bind:class="{'btn-info' : estadoLunes[0], 'btn-danger' : estadoLunes[0]}"  v-on:click="selectTramoDia('lunes', item.id, index)" >                                                     -->
                                                     <button  class="btn p-3 btn-info cambioColor1"  v-on:click="selectTramoDia('lunes', item.id, index)"  >                                                    
@@ -123,11 +104,39 @@
 
                                         </div>
                                         <!-- {{selectedDias}} -->
-                                <!-- </div> -->
+                                <!-- </div> -->                    
+                        </div>
+
+                        <div class="col-12 mt-4 ">
+                            <div class="d-block justify-content-center">
+                                <nav class="navbar navbar-light mb-2">    
+                                    <label class='pt-2'><strong>AULAS</strong></label>    
+                                </nav>      
+                                <div class='p-0 m-0'  >
+                                    <!-- <button type='button' class="btn btn-info btn-rounded m-1" v-if="estadoAulas(item.id)" >
+                                            {{ item.nombre }}
+                                    </button>
+
+                                    <button type='button' class="btn btn-info btn-rounded m-1" v-else >
+                                            {{ item.nombre }}
+                                    </button> -->
+
+                                    <button type='button' class="btn btn-info btn-rounded m-1 "  v-for="item in aulas" >
+                                            {{ item.nombre }}
+                                    </button>
+
+                            </div>
+                            </div>
+                        </div>
+
                     </div>
+
                     <div class="col-3 m-1 border">
-                        <label class='pt-2' ><strong>Asignatura</strong></label>      
-                        <div class='col-12  pt-2'>
+                    
+                        <nav class="navbar navbar-light mt-3">  
+                            <label class='pt-2' ><strong>ASIGNATURAS</strong></label>      
+                        </nav>
+                        <div class='col-12  pt-2 d-flex justify-content-center'>
                             <!-- <button type='button'  v-for="(item, index) in gruposAsig"  v-on:click="selectAsignatura(item.id, index, item.estado)" :class="item.estado == 0 ? 'btn-info m-2 btn-rounded btn  btn-block cambioColor6 ': 'btn-danger m-2 btn-rounded btn  btn-block disabled'"  >
                                     <div>   {{ item.nombre_asig }} {{item.id_asig}}{{item.estado}}</div>
                             </button> -->
@@ -144,35 +153,18 @@
                         </div>
                     </div>
                     <div class="col-2 m-1 border">
-                        <label class='pt-2'><strong>Profesor</strong></label>      
-                        <div class='col-12  pt-2'>
+    
+                        <nav class="navbar navbar-light mt-3">  
+                            <label class='pt-2'><strong>PROFESORES</strong></label>      
+                        </nav>
+                        <div class='col-12  pt-2 d-flex justify-content-center'>
                             <button type='button' class="btn btn-info btn-rounded btn-block m-2" v-for="item in datosFiltradosProfeAsig" >
                                         {{ item.nombre_profe }} {{item.apellido_profe}}
                             </button>
                         </div>
                    
                     </div>
-                    <div class="col-2 m-1 border">
-                        <label class='pt-2'><strong>Aula</strong></label>      
-                        <div class='p-0 m-0 col-4 d-flex' v-for="item in aulas"  >
-                            <!-- <button type='button' class="btn btn-info btn-rounded m-1" v-if="estadoAulas(item.id)" >
-                                    {{ item.nombre }}
-                            </button>
-
-                            <button type='button' class="btn btn-info btn-rounded m-1" v-else >
-                                    {{ item.nombre }}
-                            </button> -->
-
-
-
-                            <button type='button' class="btn btn-info btn-rounded m-1"  >
-                                    {{ item.nombre }}
-                            </button>
-
-                        </div>
-
-
-                    </div>
+                    
                   
                 </div>
                 {{selectedAsig}}               

@@ -514,7 +514,8 @@ const app = new Vue({
                   this.estadoLunes[$index] = !this.estadoLunes[$index];
   
                   if(this.estadoLunes[$index]){
-                      var x = document.getElementsByClassName("cambioColor1");
+ 
+                    var x = document.getElementsByClassName("cambioColor1");
                       x[$index].classList.add('btn-info');
                       x[$index].classList.remove('btn-danger');
 
