@@ -7,7 +7,7 @@ const app = new Vue({
         listarPro:[],
         listar:[],
         titulos:[],
-        selected: 1,
+       
         buscar:'',
         buscarAsig:'',
         itemId:'',
@@ -21,7 +21,7 @@ const app = new Vue({
         selectedYear:'' ,
         selectedCatAula: 1,
         categoriasaulas: [],
-        grupos:[],
+     
         aulas:[],
         tramoshorario:[],
  
@@ -39,17 +39,15 @@ const app = new Vue({
 
         profeAsig:[],
         buscarProfe:'',
-
+        
+        selected: 1,        
+        grupos:[],
         curso:'',
         semestre:'',
         tabla:[],
 
         // diasSemana:[[ 1, 'lunes'], [2,'martes'], [3,'miercoles'], [4,'jueves'],[ 5,'viernes']],
-        estadoLunes:[],
-        estadoMartes:[],
-        estadoMiercoles:[],
-        estadoJueves:[],
-        estadoViernes:[],
+      
         selectedTramo:'',
         selectedDias:'',
         sesionesCG:[],
@@ -83,7 +81,7 @@ const app = new Vue({
         this.getAsignaturas()
         this.getProfesores()
         this.getTramos()
-        this.getSesiones()
+        // this.getSesiones()
         this.getGruposAsig()
         this.getProfesAsig()
       
@@ -121,49 +119,22 @@ const app = new Vue({
             return filtro.nombre_profe.toUpperCase().match(this.buscarProfe.toUpperCase()) || filtro.apellido_profe.toUpperCase().match(this.buscarProfe.toUpperCase())  
           });
         },
-        // Filtros para funcionalidad Nueva sesión
-
-        datosFiltradosGA(){   // muestra solo asignaturas del grupo elegido en registrar nueva sesión
-          return this.gruposAsig.filter((filtro)=>{
-            return filtro.id_grupo.match(this.selected) 
-          });
-        },
-        datosFiltradosProfeAsig(){
-          return this.profeAsig.filter((filtro)=>{
-            return filtro.id_asig.match(this.selectedAsig)  
-          });
-        },
-                                          // muestra solo asignaturas ocupadas en un tramo, dia y grupo
-        datosFiltradosAsigCreaSe(){  
-
-          return this.sesionesCG.filter((filtro)=>{
-              return filtro.t_id.match(this.selectedTramo) || filtro.dia.match(this.selectedDias) 
-            });
-        },
-        datosFiltradosSesion($id_sesion){
-          return this.sequeda.filter((filtro)=>{
-            return filtro.id.match($id_sesion) 
-          });
-        }
-        // datosFiltradosSesPro(){
-        //   return this.sesiones.filter((filtro)=>{
-        //       return filtro.fecha.match(this.fecha) && filtro.tramo.match(this.tramo)  
+        
+        // // Filtros para funcionalidad Nueva sesión
+        // datosFiltradosGA(){   // muestra solo asignaturas del grupo elegido en registrar nueva sesión
+        //   return this.gruposAsig.filter((filtro)=>{
+        //     return filtro.id_grupo.match(this.selected) 
         //   });
-        // }
-
+        // },
+        // datosFiltradosProfeAsig(){
+        //   return this.profeAsig.filter((filtro)=>{
+        //     return filtro.id_asig.match(this.selectedAsig)  
+        //   });
+        // },
+      
     },
     methods:{
 
-
-
-        estadoAulas($id_aula, $dia, $id_tramo){
-          mismodiaytramo = this.sequeda.filter((filtro)=>{
-                return filtro.dia.match($dia) || filtro.t_id.match($id_tramo)
-          });
-
-          // return this.mismodiaytramo.a_id.includes($id_aula);
-          conosole.log('esto devuele'+this.mismodiaytramo.a_id.includes($id_aula));
-        },
         getProfesores(){         
                 axios.get('http://localhost/ghpV01/api/crud/getProfes.php')
                 .then(res =>{                    
@@ -786,60 +757,6 @@ console.log("el contenido de idTramo es:"+this.idTramo);
                 }
             })       
         },
-        construyeTabla(){
-          for (item in this.tramoshorario){
-            this.estadoLunes.push(true);
-            this.estadoMartes.push(true);
-            this.estadoMiercoles.push(true);
-            this.estadoJueves.push(true);
-            this.estadoViernes.push(true);
-          }
-          // var i;
-          // for (i = 0; i < this.tramoshorario.length; i++) {
-          //   this.fondoLunes[i] = "btn-info";
-          // }
-
-
-//           var rows = ['lunes','martes' ,'miercoles','jueves','viernes'];
-
-//           var valores=[];
-//           for (v of this.tramoshorario) {
-//             valores.push(v);
-//           } ;
-// for (var i in valores){
-
-//   if(valores.hasOwnProperty(i)){
-//       console.log($valores.[i]);
-//   }
-
-//   console.log('valores tiene:'+s+'<br>' );
-  
-// }
-
-// console.log('su tamaño es:'+valores.length);
-          // for(r of rows){
-          //     for( s of valores){
-          //         this.tabla[r][s]=r+s;
-          //     }
-          // }
-
-          // console.log('este es el contenido de la tabla'+this.tabla['lunes']);
-          // console.log('esto es lo que tiene tramoshorario:'+this.tramoshorario);
-
-          // var cols = ["a", "b", "c", "d"];
-          
-          // var grid = [ for (r of rows) [ for (c of cols) r+c ] ];
-          
-          /* 
-                   grid = [
-                      ["1a","1b","1c","1d"],
-                      ["2a","2b","2c","2d"],
-                      ["3a","3b","3c","3d"]
-                   ]
-          */
-
-
-        }
 
           // desasignar: function( event ){
 

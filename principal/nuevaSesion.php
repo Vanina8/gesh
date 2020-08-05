@@ -192,5 +192,5 @@
 
 
 <?php
-        include "../includes/footer.php";
+        include "../includes/footerSesion.php";
 ?>
