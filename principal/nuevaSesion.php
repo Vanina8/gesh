@@ -124,7 +124,7 @@
                                             {{ item.nombre }}
                                     </button> -->
 
-                                    <button type='button' class="btn btn-info btn-rounded m-1 "  v-for="item in aulas" >
+                                    <button type='button' class="btn btn-info btn-rounded m-1 cambioColorA "  v-for="item in aulas" v-on:click="selectAula(item.id)">    
                                             {{ item.nombre }}
                                     </button>
 

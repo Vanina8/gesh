@@ -62,6 +62,10 @@ const app = new Vue({
         numeroDia:[],
         idTramo:[],
         lenghtAsig:'',
+        idaulaEncendida:'',
+        aulaEncendida:false
+
+
 
         
         // f:'',
@@ -135,8 +139,12 @@ const app = new Vue({
           return this.sesionesCG.filter((filtro)=>{
               return filtro.t_id.match(this.selectedTramo) || filtro.dia.match(this.selectedDias) 
             });
+        },
+        datosFiltradosSesion($id_sesion){
+          return this.sequeda.filter((filtro)=>{
+            return filtro.id.match($id_sesion) 
+          });
         }
-
         // datosFiltradosSesPro(){
         //   return this.sesiones.filter((filtro)=>{
         //       return filtro.fecha.match(this.fecha) && filtro.tramo.match(this.tramo)  
@@ -226,6 +234,14 @@ const app = new Vue({
             .then((res) => {
               this.profeAsig = res.data;
             });     
+          },
+          getSesionesAulas(){
+            axios
+            .get("http://localhost/ghpV01/api/crud/getSesionAula.php")
+            .then((res) => {
+              return res.data;
+            });     
+
           },
           registroAsignatura() {
            
@@ -634,39 +650,48 @@ const app = new Vue({
                 }               
            
               }
+
 console.log('el contenedo de NumeroDia:'+this.numeroDia);
 console.log("el contenido de idTramo es:"+this.idTramo);
 
            },
            selectAsignatura($itemAsig, $index, $estado){
                
-             var x =document.getElementsByClassName("cambioColor6");
-
-              
+             var x =document.getElementsByClassName("cambioColor6");              
              var i;
+
              for (i = 0; i < 2; i++) {
                if(selectedAsigSesi[i]==""){
                   selectedAsigSesi[i]=$index;
                }else{
                   selectedAsigSesi[i]=$index;
                   x[$index].classList.remove('btn-info');
-
                }
-
              }
-
-              // if($estado>0){
-              //   var x =document.getElementsByClassName("cambioColor6");
-              //   x[$index].classList.add('btn-info');
-              //   x[$index].classList.remove('btn-danger');
-              // }else{
-              //   var x =document.getElementsByClassName("cambioColor6");
-              //   x[$index].classList.add('btn-danger');
-              //   x[$index].classList.remove('btn-info');
-
-              // }
-
            },
+
+           selectAula($idaula){
+
+             if(!this.aulaEncendida){
+                aulasConSesiones=getSesionesAulas();
+                var i;
+                for (i =0; i<this.numeroDia.length; i++){
+                    for (item in aulasConSesiones){
+                      if(item.id_aula == $idaula && item.id_tramo == this.idTramo[i] && item.dia == this.numeroDia[i] ){
+                        this.aulaEncendida=false;
+                        swal.fire("Aula Ocupada", ""+datosFiltradosSesion(item.id_sesion).toString, "success")
+
+                        return 
+                      }
+                    }  
+                }
+                this.aulaEncendida= true;
+                var x = document.getElementsByClassName("cambioColorA");
+                x[$index].classList.add('btn-danger');
+                x[$index].classList.remove('btn-info');
+              }
+          },
+
            registraSesion(){
 
            },
