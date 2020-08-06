@@ -20,8 +20,13 @@
      
         <label for="" class="pr-2 pl-2"> Curso:</label>
 
-          <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="curso" value='2020 - 2021'>
+            <!-- <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="curso" value='2020 - 2021'> -->
 
+            <select v-model="selectedYear" name="grupo">
+                <option v-for="option in titulosYear" v-bind:value="option.curso">
+                    {{ option.curso }}
+                </option>
+            </select>
 
 
         <label for="" class="pr-2 pl-2"> Semestre:</label>

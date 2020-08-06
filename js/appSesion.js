@@ -24,11 +24,14 @@ const app = new Vue({
         sequeda:[],
         profeEncendido:false,
         idProfeEncendido:'', //este es el id del profesor que debe tomarse al momento de registrar la sesion
-        indexProfeEncendido:''
+        indexProfeEncendido:'',
+        titulosYear:[],
+        selectedYear:''
 
 
     },
     created(){
+        this.getTitulosYear();
         this.getAulas();
         this.getGrupos();
         this.getTramos();
@@ -56,13 +59,19 @@ const app = new Vue({
     },
 
     methods: {
+       getTitulosYear(){            
+          axios.get('http://localhost/ghpV01/api/crud/getTitulosYear.php')
+          .then(res =>{                    
+              this.titulosYear = res.data
+              });
+        },
         getGrupos() {
             axios
               .get("http://localhost/ghpV01/api/crud/getGrupos.php")
               .then((res) => {
                 this.grupos = res.data;
               });
-          },     
+        },     
         getTramos(){
             axios
               .get("http://localhost/ghpV01/api/crud/getTramos.php")
@@ -70,7 +79,7 @@ const app = new Vue({
                 this.tramoshorario = res.data;
                 console.log(this.tramoshorario);
               });             
-          },
+        },
         getAulas() {
             axios
               .get("http://localhost/ghpV01/api/crud/getAulas.php")

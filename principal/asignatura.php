@@ -159,7 +159,7 @@
                                 <label for="materialRegisterFormEmail">Curso</label>
                                 <select v-model="selectedYear" name="curso" >
                                         <option v-for="optionyear in years" v-bind:value="optionyear">
-                                            {{ optionyear }}
+                                            {{ optionyear }} - {{optionyear+1}}
                                         </option>
                                 </select>
                                 <span> {{ selectedYear }}</span>

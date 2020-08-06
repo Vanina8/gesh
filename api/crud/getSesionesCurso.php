@@ -6,10 +6,10 @@ $resultado = array();
 
 
 $idgrupo = htmlentities($_GET['id_grupo']);
-$curso = htmlentities($_GET['curso']);
+$curso = substr(htmlentities($_GET['curso']), 0,4);
 $semestre = htmlentities($_GET['semestre']);
 
-// echo "esto es lo que llega: ".$idgrupo."  ".$curso." ".$semestre;
+ echo "esto es lo que llega en getSesionesCurso:".$idgrupo."  ".$curso." ".$semestre;
 
 $consulta="SELECT * FROM horario WHERE curso='$curso' AND semestre='$semestre'";
 
