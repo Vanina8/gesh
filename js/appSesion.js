@@ -1,7 +1,7 @@
 const app = new Vue({
     el:'#app',
     data:{
-        selected: 1,
+        selectedIdGrupo: 1,  // id del grupo para registrar la sesion
         grupos:[],
         curso:'',
         semestre:'',
@@ -17,10 +17,15 @@ const app = new Vue({
         estadoViernes:[],        
         aulaEncendida:false,
         idaulaEncendida:'', // este es el id de aula que debe tomarse al momento de registrar la sesion
+        indexAulaEncendida:'', // para revisar antes de registrar que el boton no este desactivado 
         numeroDia:[],       // numeros de dia que debe tomarse para guardar la sesion
         idTramo:[],          // numeros de tramos que se deben tomar al guardar la sesion
         estadoBtnAula:false,
-        sequeda:[]
+        sequeda:[],
+        profeEncendido:false,
+        idProfeEncendido:'', //este es el id del profesor que debe tomarse al momento de registrar la sesion
+        indexProfeEncendido:''
+
 
     },
     created(){
@@ -35,7 +40,7 @@ const app = new Vue({
         
         datosFiltradosGA(){   // muestra solo asignaturas del grupo elegido en registrar nueva sesión
             return this.gruposAsig.filter((filtro)=>{
-              return filtro.id_grupo.match(this.selected) 
+              return filtro.id_grupo.match(this.selectedIdGrupo) 
             });
         },
         datosFiltradosProfeAsig(){
@@ -102,8 +107,7 @@ const app = new Vue({
                 this.sequeda = res.data;
                  console.log('esto trae sequedaaaaaaaa:'+Object.keys(this.sequeda[0]));
                  console.log('codigo de la primera aula es:'+this.sequeda[0].a_id);
-                // v= JSON.stringify(this.sequeda);
-                // console.log('esto trae sequedaaaaaaaa:'+ v);
+
             });             
         },
         getSesionesAulas(){
@@ -120,7 +124,7 @@ const app = new Vue({
 
                 this.mostrarOpciones= true;
                 this.construyeTabla();
-                this.getSesionesCursoGrupo(this.selected, this.curso, this.semestre);
+                this.getSesionesCursoGrupo(this.selectedIdGrupo, this.curso, this.semestre);
 
                 console.log("estos son los valores de sesiones"+this.sesionesCG);
 
@@ -134,9 +138,6 @@ const app = new Vue({
                 // console.log('jueves'+this.tabla['jueves'])
         },
            
-        registraSesion(){
-
-        },
         selectTramoDia($dia, $tramo, $index){
             console.log("lo que trae al metodo selectTramoDia es: "+$dia+" "+$tramo+" "+$index );
                         
@@ -257,34 +258,37 @@ const app = new Vue({
 
             console.log('trae este id de aula:'+$idaula);
 
-            if(!this.aulaEncendida){
-               aulasConSesiones=this.getSesionesAulas();
-               var i;
-               for (i =0; i<this.numeroDia.length; i++){
-                   for (item in aulasConSesiones){
-                     if(item.id_aula == $idaula && item.id_tramo == this.idTramo[i] && item.dia == this.numeroDia[i] ){
-                       this.aulaEncendida=false;
-                       swal.fire("Aula Ocupada", ""+datosFiltradosSesion(item.id_sesion).toString, "success")
+            if(!this.aulaEncendida){   // si no hay ningun boton de aula encendido
+              //  aulasConSesiones=this.getSesionesAulas();
+              //  var i;
+              //  for (i =0; i<this.numeroDia.length; i++){
+              //      for (item in aulasConSesiones){
+              //        if(item.id_aula == $idaula && item.id_tramo == this.idTramo[i] && item.dia == this.numeroDia[i] ){
+              //          this.aulaEncendida=false;
+              //          swal.fire("Aula Ocupada", ""+datosFiltradosSesion(item.id_sesion).toString, "success")
 
-                       return 
-                     }
-                   }  
-               }
+              //          return 
+              //        }
+              //      }  
+              //  }
                this.aulaEncendida= true;
                var x = document.getElementsByClassName("cambioColorA");
                x[$index].classList.add('btn-danger');
                x[$index].classList.remove('btn-info');
                this.idaulaEncendida=$idaula;
+               this.indexAulaEncendida=$index;
 
              }else if($idaula== this.idaulaEncendida){
 
                  this.aulaEncendida=false;
                  this.idaulaEncendida='';
+                 this.indexAulaEncendida='';
                  var x = document.getElementsByClassName("cambioColorA");
                  x[$index].classList.add('btn-info');
                  x[$index].classList.remove('btn-danger');
   
              }
+             console.log('aula encendida es:'+this.idaulaEncendida+" index de aula encendida es:"+this.indexAulaEncendida);
          },
          construyeTabla(){
             for (item in this.tramoshorario){
@@ -296,7 +300,7 @@ const app = new Vue({
             }
         },
         estadoAulas($id_aula, $dia, $id_tramo){
-            console.log("me trae estos parametros: "+$id_aula+" "+$dia+" "+$id_tramo);
+            // console.log("me trae estos parametros: "+$id_aula+" "+$dia+" "+$id_tramo);
             var i;
             for( i = 0; i < this.sequeda.length; i++){
                 //  console.log(' esta entrando al for  dia es:'+this.sequeda[i].dia+' tramo es:'+this.sequeda[i].t_id+" id aula es:"+this.sequeda[i].a_id);
@@ -334,13 +338,39 @@ const app = new Vue({
                         var x = document.getElementById(i);
                         if(this.estadoAulas(this.aulas[i].id, this.numeroDia[j],this.idTramo[j])){
                             x.setAttribute('disabled', '');  
-                            console.log( 'Esta aula ya esta ocupada ese dia y tramo');
+                            // console.log( 'Esta aula ya esta ocupada ese dia y tramo');
                         }
                     }            
-                 }     
-                  
+                 }                       
+          },
+          selectProfe($idProfe, $index){
+
+            if(!this.profeEncendido){   // si no hay ningun boton de profesor encendido
+               this.profeEncendido= true;
+               var x = document.getElementsByClassName("cambioColorP");
+               x[$index].classList.add('btn-danger');
+               x[$index].classList.remove('btn-info');
+               this.idProfeEncendido=$idProfe;
+               this.indexProfeEncendido=$index;
+
+             }else if($idProfe== this.idProfeEncendido){
+
+                 this.profeEncendido=false;
+                 this.idProfeEncendido='';
+                 this.indexProfeEncendido='';
+                 var x = document.getElementsByClassName("cambioColorP");
+                 x[$index].classList.add('btn-info');
+                 x[$index].classList.remove('btn-danger');
+             }
+             console.log('profesor encendido es:'+this.idProfeEncendido+" index de profesor encendido es:"+this.indexProfeEncendido);
+          },
+          registraSesion(){
+              console.log( ' estoy en registrar sesion');
+          },
+          verHorario(){
+              console.log('ver horario');
           }
-    },
+    }
 })
 
 // var i;

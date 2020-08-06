@@ -11,7 +11,7 @@
         
         <label for="" class="pr-2"> Grupo:</label>
 
-        <select v-model="selected" name="grupo">
+        <select v-model="selectedIdGrupo" name="grupo">
                 <option v-for="option in grupos" v-bind:value="option.id">
                     {{ option.nombre }}
                 </option>
@@ -24,7 +24,7 @@
 
 
 
-        <label for="" class="pr-2"> Semestre:</label>
+        <label for="" class="pr-2 pl-2"> Semestre:</label>
         
         <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="semestre" value='1'>
 
@@ -33,7 +33,12 @@
 
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
 
-        Grupo: {{selected}} Curso: {{curso}} Semestre: {{semestre}}
+        Grupo: {{selectedIdGrupo}} Curso: {{curso}} Semestre: {{semestre}}
+
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='verHorario()'>Visualizar</button>
+
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='registraSesion()'>Registrar</button>
+
     </form>
     <div class='d-flex justify-content-right' >
         <label class='pt-4' for="">REGISTRO DE SESIONES</label>
@@ -120,15 +125,12 @@
                                     <button type='button' class="btn btn-info btn-rounded m-1 cambioColorA" v-for='(item, index) in aulas' v-on:click="selectAula(item.id, index)" :id='index'>    
                                             {{ item.nombre }}
                                     </button>
-
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
-                    <div class="col-3 m-1 border">
-                    
+                    <div class="col-3 m-1 border">                  
                         <nav class="navbar navbar-light mt-3">  
                             <label class='pt-2' ><strong>ASIGNATURAS</strong></label>      
                         </nav>
@@ -146,8 +148,9 @@
                             <label class='pt-2'><strong>PROFESORES</strong></label>      
                         </nav>
                         <div class='col-12  pt-2 d-block justify-content-center'>
-                            <button type='button' class="btn btn-info btn-rounded btn-block m-2" v-for="item in datosFiltradosProfeAsig" >
-                                        {{ item.nombre_profe }} {{item.apellido_profe}}
+                            <button type='button' class="btn btn-info btn-rounded btn-block m-2 cambioColorP" v-for="(item, index) in datosFiltradosProfeAsig"
+                            v-on:click="selectProfe(item.id_profe, index)">
+                                        {{item.id_profe}}-{{ item.nombre_profe }} {{item.apellido_profe}}
                             </button>
                         </div>
                    
