@@ -8,13 +8,20 @@ const app = new Vue({
         mostrarOpciones:false,
         tramoshorario:[],
         aulas:[],
-        selectedAsig: 1,
-        profeAsig:[],  
+        selectedAsig: 1,   // id de asignatura para registrar la sesion
+        profeAsig:[],       
         estadoLunes:[],
         estadoMartes:[],
         estadoMiercoles:[],
         estadoJueves:[],
         estadoViernes:[],        
+        aulaEncendida:false,
+        idaulaEncendida:'', // este es el id de aula que debe tomarse al momento de registrar la sesion
+        numeroDia:[],       // numeros de dia que debe tomarse para guardar la sesion
+        idTramo:[],          // numeros de tramos que se deben tomar al guardar la sesion
+        estadoBtnAula:false,
+        sequeda:[]
+
     },
     created(){
         this.getAulas();
@@ -93,9 +100,20 @@ const app = new Vue({
             .get("http://localhost/ghpV01/api/crud/getSesion.php")
             .then((res) => {
                 this.sequeda = res.data;
-                console.log('esto trae:'+this.sequeda)
+                 console.log('esto trae sequedaaaaaaaa:'+Object.keys(this.sequeda[0]));
+                 console.log('codigo de la primera aula es:'+this.sequeda[0].a_id);
+                // v= JSON.stringify(this.sequeda);
+                // console.log('esto trae sequedaaaaaaaa:'+ v);
             });             
         },
+        getSesionesAulas(){
+            axios
+            .get("http://localhost/ghpV01/api/crud/getSesionAula.php")
+            .then((res) => {
+              return res.data;
+            });     
+
+          },
         buscaNuevo(){
                 this.lenghtAsig= this.gruposAsig.length;
                   console.log('tamaño de array es:'+this.lenghtAsig);
@@ -122,6 +140,7 @@ const app = new Vue({
         selectTramoDia($dia, $tramo, $index){
             console.log("lo que trae al metodo selectTramoDia es: "+$dia+" "+$tramo+" "+$index );
                         
+
             if($dia=='lunes'){
                 
                   this.estadoLunes[$index] = !this.estadoLunes[$index];
@@ -132,37 +151,32 @@ const app = new Vue({
                       x[$index].classList.add('btn-info');
                       x[$index].classList.remove('btn-danger');
 
-                      var pos_dia =this.numeroDia.indexOf($dia)
-                      var pos_idtra =this.idTramo.indexOf($tramo)
-                      this.numeroDia.splice(pos_dia, 1);
-                      this.idTramo.splice(pos_idtra, 1);
+                    this.eliminaDiaTramoEncendido(1, $tramo);
 
                   }else{
                       var x =document.getElementsByClassName("cambioColor1");
                       x[$index].classList.add('btn-danger');
                       x[$index].classList.remove('btn-info');
 
-                      this.numeroDia=+1;
-                      this.idTramo=+$tramo;
+                      this.numeroDia.push(1);
+                      this.idTramo.push($tramo);
 
                   }                               
+
                   console.log('el valor asignado para clase cambioColor:'+ document.getElementsByClassName("cambioColor").toString);
             }
             if($dia=='martes'){
-            
 
-                  this.estadoMartes[$index] = !this.estadoMartes[$index];
+                 this.estadoMartes[$index] = !this.estadoMartes[$index];
 
                   if(this.estadoMartes[$index]){
                     var x = document.getElementsByClassName("cambioColor2");
                     x[$index].classList.add('btn-info');
                     x[$index].classList.remove('btn-danger');
 
-                    var pos_dia =this.numeroDia.indexOf($dia)
-                    var pos_idtra =this.idTramo.indexOf($tramo)
-                    this.numeroDia.splice(pos_dia, 1);
-                    this.idTramo.splice(pos_idtra, 1);
-              }else{
+                    this.eliminaDiaTramoEncendido(2, $tramo);
+                }else{
+
                     var x =document.getElementsByClassName("cambioColor2");
                     x[$index].classList.add('btn-danger');
                     x[$index].classList.remove('btn-info');
@@ -180,11 +194,9 @@ const app = new Vue({
                   x[$index].classList.add('btn-info');
                   x[$index].classList.remove('btn-danger');
 
-                  var pos_dia =this.numeroDia.indexOf($dia)
-                  var pos_idtra =this.idTramo.indexOf($tramo)
-                  this.numeroDia.splice(pos_dia, 1);
-                  this.idTramo.splice(pos_idtra, 1);
-            }else{
+                  this.eliminaDiaTramoEncendido(3, $tramo);
+                }else{
+
                   var x =document.getElementsByClassName("cambioColor3");
                   x[$index].classList.add('btn-danger');
                   x[$index].classList.remove('btn-info');
@@ -202,12 +214,10 @@ const app = new Vue({
                   x[$index].classList.add('btn-info');
                   x[$index].classList.remove('btn-danger');
 
-                  var pos_dia =this.numeroDia.indexOf($dia)
-                  var pos_idtra =this.idTramo.indexOf($tramo)
-                  this.numeroDia.splice(pos_dia, 1);
-                  this.idTramo.splice(pos_idtra, 1);
+                  this.eliminaDiaTramoEncendido(4, $tramo);
                 }else{
-                  var x =document.getElementsByClassName("cambioColor4");
+
+                    var x =document.getElementsByClassName("cambioColor4");
                   x[$index].classList.add('btn-danger');
                   x[$index].classList.remove('btn-info');
 
@@ -224,12 +234,10 @@ const app = new Vue({
                   x[$index].classList.add('btn-info');
                   x[$index].classList.remove('btn-danger');
 
-                  var pos_dia =this.numeroDia.indexOf($dia)
-                  var pos_idtra =this.idTramo.indexOf($tramo)
-                  this.numeroDia.splice(pos_dia, 1);
-                  this.idTramo.splice(pos_idtra, 1);
+                  this.eliminaDiaTramoEncendido(5, $tramo);
                 }else{
-                  var x =document.getElementsByClassName("cambioColor5");
+
+                   var x =document.getElementsByClassName("cambioColor5");
                   x[$index].classList.add('btn-danger');
                   x[$index].classList.remove('btn-info');
 
@@ -240,12 +248,17 @@ const app = new Vue({
               }
                 console.log('el contenedo de NumeroDia:'+this.numeroDia);
                 console.log("el contenido de idTramo es:"+this.idTramo);
+
+                this.revisaEstadoAula();
+
            },
 
-        selectAula($idaula){
+           selectAula($idaula, $index){
+
+            console.log('trae este id de aula:'+$idaula);
 
             if(!this.aulaEncendida){
-               aulasConSesiones=getSesionesAulas();
+               aulasConSesiones=this.getSesionesAulas();
                var i;
                for (i =0; i<this.numeroDia.length; i++){
                    for (item in aulasConSesiones){
@@ -261,6 +274,16 @@ const app = new Vue({
                var x = document.getElementsByClassName("cambioColorA");
                x[$index].classList.add('btn-danger');
                x[$index].classList.remove('btn-info');
+               this.idaulaEncendida=$idaula;
+
+             }else if($idaula== this.idaulaEncendida){
+
+                 this.aulaEncendida=false;
+                 this.idaulaEncendida='';
+                 var x = document.getElementsByClassName("cambioColorA");
+                 x[$index].classList.add('btn-info');
+                 x[$index].classList.remove('btn-danger');
+  
              }
          },
          construyeTabla(){
@@ -273,15 +296,50 @@ const app = new Vue({
             }
         },
         estadoAulas($id_aula, $dia, $id_tramo){
-            mismodiaytramo = this.sequeda.filter((filtro)=>{
-                  return filtro.dia.match($dia) || filtro.t_id.match($id_tramo)
-            });
-  
-            // return this.mismodiaytramo.a_id.includes($id_aula);
-            conosole.log('esto devuele'+this.mismodiaytramo.a_id.includes($id_aula));
+            console.log("me trae estos parametros: "+$id_aula+" "+$dia+" "+$id_tramo);
+            var i;
+            for( i = 0; i < this.sequeda.length; i++){
+                //  console.log(' esta entrando al for  dia es:'+this.sequeda[i].dia+' tramo es:'+this.sequeda[i].t_id+" id aula es:"+this.sequeda[i].a_id);
+                // console.log('los valores de sequeda son:'+Object.values(this.sequeda));
+                if(this.sequeda[i].dia==$dia && this.sequeda[i].t_id== $id_tramo && this.sequeda[i].a_id==$id_aula){
+                    return true;
+                }
+            }
+            return false;
+          },
+          eliminaDiaTramoEncendido($ndia,$tramo){
+            var pos='';
+            var i;
+            for(i = 0; i < this.numeroDia.length; i++){
+                if(this.numeroDia[i]==$ndia && this.idTramo[i]==$tramo){
+                  pos=i;
+                }
+            }
+            this.numeroDia.splice(pos, 1);
+            this.idTramo.splice(pos, 1);
           },
 
-   
+          revisaEstadoAula(){           
+            var i;
+                
+              for(i = 0; i < this.aulas.length; i++){
+                  var x = document.getElementById(i);
+                  x.removeAttribute('disabled');                    
+              }  
+                var j;
+                for (j =0; j < this.numeroDia.length; j++){
+
+                    for(i = 0; i < this.aulas.length; i++){
+                       
+                        var x = document.getElementById(i);
+                        if(this.estadoAulas(this.aulas[i].id, this.numeroDia[j],this.idTramo[j])){
+                            x.setAttribute('disabled', '');  
+                            console.log( 'Esta aula ya esta ocupada ese dia y tramo');
+                        }
+                    }            
+                 }     
+                  
+          }
     },
 })
 

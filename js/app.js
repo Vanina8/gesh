@@ -57,11 +57,9 @@ const app = new Vue({
         fondo:'',
         fondoLunes:[],
         estado:true,
-        numeroDia:[],
-        idTramo:[],
+      
         lenghtAsig:'',
-        idaulaEncendida:'',
-        aulaEncendida:false
+        
 
 
 
@@ -119,7 +117,7 @@ const app = new Vue({
             return filtro.nombre_profe.toUpperCase().match(this.buscarProfe.toUpperCase()) || filtro.apellido_profe.toUpperCase().match(this.buscarProfe.toUpperCase())  
           });
         },
-        
+
         // // Filtros para funcionalidad Nueva sesión
         // datosFiltradosGA(){   // muestra solo asignaturas del grupo elegido en registrar nueva sesión
         //   return this.gruposAsig.filter((filtro)=>{
@@ -206,14 +204,7 @@ const app = new Vue({
               this.profeAsig = res.data;
             });     
           },
-          getSesionesAulas(){
-            axios
-            .get("http://localhost/ghpV01/api/crud/getSesionAula.php")
-            .then((res) => {
-              return res.data;
-            });     
 
-          },
           registroAsignatura() {
            
               const form = document.getElementById("formAsignatura")

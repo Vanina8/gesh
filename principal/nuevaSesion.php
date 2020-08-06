@@ -115,20 +115,13 @@
                                 <nav class="navbar navbar-light mb-2">    
                                     <label class='pt-2'><strong>AULAS</strong></label>    
                                 </nav>      
-                                <div class='p-0 m-0'  >
-                                    <!-- <button type='button' class="btn btn-info btn-rounded m-1" v-if="estadoAulas(item.id)" >
+                                <div class='p-0 m-0'   >
+
+                                    <button type='button' class="btn btn-info btn-rounded m-1 cambioColorA" v-for='(item, index) in aulas' v-on:click="selectAula(item.id, index)" :id='index'>    
                                             {{ item.nombre }}
                                     </button>
 
-                                    <button type='button' class="btn btn-info btn-rounded m-1" v-else >
-                                            {{ item.nombre }}
-                                    </button> -->
-
-                                    <button type='button' class="btn btn-info btn-rounded m-1 cambioColorA "  v-for="item in aulas" v-on:click="selectAula(item.id)">    
-                                            {{ item.nombre }}
-                                    </button>
-
-                            </div>
+                                </div>
                             </div>
                         </div>
 
@@ -140,14 +133,6 @@
                             <label class='pt-2' ><strong>ASIGNATURAS</strong></label>      
                         </nav>
                         <div class='col-12  pt-2 d-flex justify-content-center'>
-                            <!-- <button type='button'  v-for="(item, index) in gruposAsig"  v-on:click="selectAsignatura(item.id, index, item.estado)" :class="item.estado == 0 ? 'btn-info m-2 btn-rounded btn  btn-block cambioColor6 ': 'btn-danger m-2 btn-rounded btn  btn-block disabled'"  >
-                                    <div>   {{ item.nombre_asig }} {{item.id_asig}}{{item.estado}}</div>
-                            </button> -->
-
-                            <!-- referencia -->
-                            <!-- <button type='button' class="btn btn-info btn-rounded btn-block m-2" v-for="item in gruposAsig"  v-on:click="item.estado>item.estado ? item.estado : item.estado++ " > -->
-                            <!-- class="btn btn-info btn-rounded btn-block m-2 cambioColor6" -->
-
                              <select v-model="selectedAsig" name="asig" size='11' class="border border-0 shadow mb-3" >
                                       <option class="btn btn-info btn-rounded btn-block m-3" v-for="(option, index) in datosFiltradosGA" v-bind:value="option.id_asig">
                                               {{option.nombre_asig}} - {{item.id_asig}}  - {{item.estado}}
@@ -160,7 +145,7 @@
                         <nav class="navbar navbar-light mt-3">  
                             <label class='pt-2'><strong>PROFESORES</strong></label>      
                         </nav>
-                        <div class='col-12  pt-2 d-flex justify-content-center'>
+                        <div class='col-12  pt-2 d-block justify-content-center'>
                             <button type='button' class="btn btn-info btn-rounded btn-block m-2" v-for="item in datosFiltradosProfeAsig" >
                                         {{ item.nombre_profe }} {{item.apellido_profe}}
                             </button>
