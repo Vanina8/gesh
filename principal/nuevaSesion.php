@@ -11,34 +11,31 @@
         
         <label for="" class="pr-2"> Grupo:</label>
 
-        <select v-model="selectedIdGrupo" name="grupo">
-                <option v-for="option in grupos" v-bind:value="option.id">
-                    {{ option.nombre }}
-                </option>
-        </select>
-        
+            <select v-model="selectedIdGrupo" name="grupo"  class='form-control'>
+                    <option v-for="option in grupos" v-bind:value="option.id">
+                        {{ option.nombre }}
+                    </option>
+            </select>
      
         <label for="" class="pr-2 pl-2"> Curso:</label>
 
-            <!-- <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="curso" value='2020 - 2021'> -->
-
-            <select v-model="selectedYear" name="grupo">
-                <option v-for="option in titulosYear" v-bind:value="option.curso">
-                    {{ option.curso }}
+            <select v-model="selectedYear" name="curso" class='form-control'>
+                <option v-for="option in titulosYear" v-bind:value="option.curso" >
+                    {{ option.curso }} 
                 </option>
             </select>
 
+        <label for="" class="pr-2 pl-2"> Semestre:</label>        
 
-        <label for="" class="pr-2 pl-2"> Semestre:</label>
+          <select v-model="selectedSem" name="seme" class='form-control'>
+                <option v-for="option in semestres" v-bind:value="option" >
+                    {{ option }} 
+                </option>
+            </select>
         
-        <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="semestre" value='1'>
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Empezar</button>
 
-
-        <!-- <span> {{ selected }}</span> -->
-
-        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
-
-        Grupo: {{selectedIdGrupo}} Curso: {{curso}} Semestre: {{semestre}}
+        Grupo: {{selectedIdGrupo}} Curso: {{selectedYear}} Semestre: {{selectedSem}}
 
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='verHorario()'>Visualizar</button>
 
@@ -55,8 +52,6 @@
         <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formRegSesion" autocomplete="off" @submit.prevent="registraSesion">  
 
                 <div class=" row container-fluid col-12 pt-3 justify-content-center">
-
-
                     <div class="col-4 m-1 border">
                         <div class="col-12 d-block justify-content-center">
                         
@@ -87,7 +82,6 @@
                                         <div class='row col-12 d-flex justify-content-center' v-for="(item, index) in tramoshorario" id='horario' >
                                                                                                                                   
                                                 <div class='col-2 text-center'>
-                                                    <!-- <button  class="btn  p-3" v-bind:class="{'btn-info' : estadoLunes[0], 'btn-danger' : estadoLunes[0]}"  v-on:click="selectTramoDia('lunes', item.id, index)" >                                                     -->
                                                     <button  class="btn p-3 btn-info cambioColor1"  v-on:click="selectTramoDia('lunes', item.id, index)"  >                                                    
                                                            {{item.inicio}}
                                                     </button>
@@ -112,12 +106,8 @@
                                                                 {{item.inicio}} 
                                                     </button>
                                                 </div>
-                                               
-                                            <!-- </div>   -->
 
                                         </div>
-                                        <!-- {{selectedDias}} -->
-                                <!-- </div> -->                    
                         </div>
 
                         <div class="col-12 mt-4 ">
@@ -141,7 +131,7 @@
                         </nav>
                         <div class='col-12  pt-2 d-flex justify-content-center'>
                              <select v-model="selectedAsig" name="asig" size='11' class="border border-0 shadow mb-3" >
-                                      <option class="btn btn-info btn-rounded btn-block m-3" v-for="(option, index) in datosFiltradosGA" v-bind:value="option.id_asig">
+                                      <option class="btn btn-info btn-rounded btn-block m-3" v-for="(option, index) in datosFiltradosGA" v-bind:value="option.id_asig" v-on:click="revisaEstadoProfe()" >
                                               {{option.nombre_asig}} - {{item.id_asig}}  - {{item.estado}}
                                       </option>
                              </select>
@@ -152,9 +142,8 @@
                         <nav class="navbar navbar-light mt-3">  
                             <label class='pt-2'><strong>PROFESORES</strong></label>      
                         </nav>
-                        <div class='col-12  pt-2 d-block justify-content-center'>
-                            <button type='button' class="btn btn-info btn-rounded btn-block m-2 cambioColorP" v-for="(item, index) in datosFiltradosProfeAsig"
-                            v-on:click="selectProfe(item.id_profe, index)">
+                        <div class='col-12  pt-2 d-block justify-content-center' id='profesVisibles' >
+                            <button type='button' class="btn btn-info btn-rounded btn-block m-2 cambioColorP" v-for="(item, index) in datosFiltradosProfeAsig"  v-on:click="selectProfe(item.id_profe, index)" :id='item.id_profe*1000' >
                                         {{item.id_profe}}-{{ item.nombre_profe }} {{item.apellido_profe}}
                             </button>
                         </div>
@@ -167,9 +156,6 @@
         </form>  
 </div>
 
-
-
-
   <!-- <div class="row modal-body col-12">
                   <div class='col-5'>
                   </div>
@@ -179,10 +165,6 @@
                      </option> 
                    </div>
   </div> -->
-
-
-
-
 
 <?php
         include "../includes/footerSesion.php";
