@@ -49,7 +49,7 @@
 <!--/.Navbar -->
 
 <div id="dt-basic-checkbox" class="table" cellspacing="0" width="100%" v-if="mostrarOpciones">
-        <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formRegSesion" autocomplete="off" @submit.prevent="registraSesion">  
+        <!-- <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formRegSesion" autocomplete="off" @submit.prevent="registraSesion">   -->
 
                 <div class=" row container-fluid col-12 pt-3 justify-content-center">
                     <div class="col-4 m-1 border">
@@ -131,7 +131,7 @@
                         </nav>
                         <div class='col-12  pt-2 d-flex justify-content-center'>
                              <select v-model="selectedAsig" name="asig" size='11' class="border border-0 shadow mb-3" >
-                                      <option class="btn btn-info btn-rounded btn-block m-3" v-for="(option, index) in datosFiltradosGA" v-bind:value="option.id_asig" v-on:click="revisaEstadoProfe()" >
+                                      <option class="btn btn-info btn-rounded btn-block m-3" v-for="(option, index) in datosFiltradosGA" v-bind:value="option.id_asig" v-on:click="alCambiarAsig()" >
                                               {{option.nombre_asig}} - {{item.id_asig}}  - {{item.estado}}
                                       </option>
                              </select>
@@ -142,9 +142,9 @@
                         <nav class="navbar navbar-light mt-3">  
                             <label class='pt-2'><strong>PROFESORES</strong></label>      
                         </nav>
-                        <div class='col-12  pt-2 d-block justify-content-center' id='profesVisibles' >
+                        <div class='col-12  pt-2 d-block justify-content-center' id='profesVisibles' name='profesVisibles' >
                             <button type='button' class="btn btn-info btn-rounded btn-block m-2 cambioColorP" v-for="(item, index) in datosFiltradosProfeAsig"  v-on:click="selectProfe(item.id_profe, index)" :id='item.id_profe*1000' >
-                                        {{item.id_profe}}-{{ item.nombre_profe }} {{item.apellido_profe}}
+                                        {{index}} - {{ item.nombre_profe }} {{item.apellido_profe}}
                             </button>
                         </div>
                    
@@ -153,7 +153,7 @@
                   
                 </div>
                 {{selectedAsig}}               
-        </form>  
+        <!-- </form>   -->
 </div>
 
   <!-- <div class="row modal-body col-12">

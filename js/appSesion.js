@@ -8,7 +8,7 @@ const app = new Vue({
         mostrarOpciones:false,
         tramoshorario:[],
         aulas:[],
-        selectedAsig: 1,       // id de asignatura para registrar la sesion
+        selectedAsig: null,       // id de asignatura para registrar la sesion
         profeAsig:[],       
         estadoLunes:[],
         estadoMartes:[],
@@ -113,7 +113,6 @@ const app = new Vue({
             .get("http://localhost/ghpV01/api/crud/getSesion.php/?curso="+$curso+"&semestre="+$semestre)
             .then((res) => {
                 this.sequeda = res.data;
-                swal.fire("Viene de getSesion.php", " "+this.sequeda, "fail")
             });             
         },
         // getSesionesAulas(){
@@ -124,7 +123,7 @@ const app = new Vue({
         //     });     
         // },
         buscaNuevo(){
-                this.lenghtAsig= this.gruposAsig.length;
+                this.lenghtAsig = this.gruposAsig.length;
                 console.log('tamaño de array es:'+this.lenghtAsig);
 
                 this.mostrarOpciones= true;
@@ -284,7 +283,7 @@ const app = new Vue({
           },
 
           revisaEstadoAula(){           
-            // el concepto es poner todas en libres para despues desabilitarlas si se encuentran en el array sequeda
+            // Elimina el atributo disabled a todas las aulas para después desabilitarlas si se encuentran en el array de sesiones registradas para el grupo en ese curso y semestre (array sequeda)
             var i;                
               for(i = 0; i < this.aulas.length; i++){
                   var x = document.getElementById(i);
@@ -323,46 +322,71 @@ const app = new Vue({
           },
           revisaEstadoProfe(){    
 
-// buscar en array de todos los profesores y con getElementById llamar a los botones en el documento con los id_profesor del array
-// si los encuentra remover el atributo disabled
-
+          // Elimina a todos los profesores visibles el atributo disabled
             var i;                
             for(i = 0; i < this.profeAsig.length; i++){
                 var x = document.getElementById(this.profeAsig[i].id_profe*1000);
-                console.log('entro al if el id del tag es: '+this.profeAsig[i].id_profe*1000);
-                console.log('la x vale: '+x );
 
-                if(!(x==="") && x!=null){
-                  console.log('entro a remover atributo porque no esta vacia la X');
+                if(!((x==="") || (x==null))){
                     x.removeAttribute('disabled'); 
                 }
-            }  
-            
-
-//buscar de hacerlo con algo parecido a getSesionAulas() pero de profes para no recorrer todos los registros de la tabla profes
-// Si se encuentra el elemento invocar a un metodo que revise si el profe esta ocupado en esos dias y tramos
-// Si esta ocupado asigarle el atributo disabled  
-
+            }             
+            // Busca la disponibilidad de los profesores en los dias y tramos marcados para inabilitar el boton
             var j;
             for (j =0; j < this.numeroDia.length; j++){
 
                 for(i = 0; i < this.profeAsig.length; i++){
                         
                     var x = document.getElementById(this.profeAsig[i].id_profe*1000);
-                    if(!(x==="") && x!=null){
-                      console.log('entro al if el id del tag es: '+this.profeAsig[i].id_profe*1000);
-                      console.log('la x vale: '+x );
+                    if(!((x==="") || (x==null))){
                       if(this.estadoProfe(this.profeAsig[i].id_profe, this.numeroDia[j],this.idTramo[j])){
-                         console.log('encontro que si tiene una sesion en ese mismo momento');
                           x.setAttribute('disabled', '');  
-
                       }
                     }
-              }            
-            }    
+                }            
+             }    
           },
           registraSesion(){
+
               console.log( ' estoy en registrar sesion');
+
+               if(!this.hayDiayTramo()){
+                   swal.fire(' Falta un dato por lo menos', 'Elija al menos un tramo de un día', 'fail');
+                   return;
+               }
+               if(!this.haySelectAsig()){
+                   swal.fire("Falta un dato por lo menos", "Elija una asignatura", "fail");
+                   return;
+               }
+               if(!this.hayProfeyAulaEncendidas()){
+                   swal.fire("Falta un dato por lo menos", "Le faltó elejir el aula el profesor", "fail")
+                   return;
+               }
+               if(!this.profeValido()) {
+                   swal.fire('Falta un dato por lo menos', 'Elija un profesor válido', 'fail');
+                   return;
+               }
+               if(!this.aulaValida()){
+                   swal.fire('Falta un dato por lo menos', 'Elija una aula válida', 'fail');
+                   return;
+             }
+
+               console.log(' esta es la cantidad y elementos de array numeroDia:'+this.numeroDia.length+' '+this.numeroDia);
+               console.log('la asignatura elejida es: '+this.selectedAsig);
+               console.log('el profe y aula elegidos son:'+this.idProfeEncendido+' '+this.idaulaEncendida);
+               console.log(' esta todo ok, sin problemas para grabar');
+
+
+              axios.post('../api/Registro/sesion.php', {selectedIdGrupo: this.selectedIdGrupo, selectedSem: this.selectedSem, selectedAsig: this.selectedAsig, idaulaEncendida: this.idAulaEncendida, idProfeEncendido: this.idProfeEncendido,idTramo:this.idTramo, numeroDia: this.numeroDia, selectedYear: this.selectedYear })
+              .then( res =>{
+                  this.respuesta = res.data
+                  if (res.data == 'success') {           
+                      location.href = '../principal/nuevaSesion.php'
+                  } else {
+                      swal.fire('No se pudo registrar la sesión')
+                  }                  
+              })
+
               // Debe haber por lo menos un elemento en el array numeroDias
               // No debe estar vacia la varible que guarda la seleccion de asignatura
               // No debe estar vacias las variables profesorEncendido y aulaEncendida
@@ -374,8 +398,68 @@ const app = new Vue({
               // las otras tablas de indices con sesion estan en veremos, no parecen ser necesarias
 
           },
+          alCambiarAsig(){
+              if(this.profeEncendido){
+                  this.apagarBoton('cambioColorP', this.indexProfeEncendido);
+              }
+              var i;                
+              for(i = 0; i < this.profeAsig.length; i++){
+                  var x = document.getElementById(this.profeAsig[i].id_profe*1000);
+  
+                  if(!((x==="") || (x==null))){
+                      x.removeAttribute('disabled'); 
+                  }
+              }  
+              this.idProfeEncendido = '';
+              this.profeEncendido = false;
+              this.indexProfeEncendido = '';
+        
+              var j;
+              for (j =0; j < this.numeroDia.length; j++){
+  
+                  for(i = 0; i < this.profeAsig.length; i++){
+                          
+                      var x = document.getElementById(this.profeAsig[i].id_profe*1000);
+                      if(!((x==="") || (x==null))){
+                        if(this.estadoProfe(this.profeAsig[i].id_profe, this.numeroDia[j],this.idTramo[j])){
+                            x.setAttribute('disabled', '');  
+                        }
+                      }
+                  }            
+               }    
+          },
           verHorario(){
               console.log('ver horario');
+          }, 
+          hayDiayTramo(){            
+              return this.numeroDia.length>0 ? true : false;
+          },
+          haySelectAsig(){
+              return this.selectedAsig == null ? false : true;
+          },
+          hayProfeyAulaEncendidas(){
+              return this.profeEncendido && this.aulaEncendida ? true : false;
+          },
+          profeValido(){
+            if(this.profesorDisponible() && this.profesorVisible()) return true;
+            return false;
+          },
+          profesorDisponible(){
+            if(document.getElementById(this.idProfeEncendido).hasAttribute("disabled")) return true;            
+            return false;            
+          },
+          profesorVisible(){
+            var x = document.getElementById(this.idProfeEncendido*1000);
+            if(x != null){
+                console.log('El profe se encuentra visible ');
+                return true;
+            } 
+            console.log(' el profe no esta visible');
+            return false;            
+          },
+          aulaValida(){
+            if(document.getElementById(this.idaulaEncendida).hasAttribute("disabled")) return true;
+            return false;            
           }
     }
 })
