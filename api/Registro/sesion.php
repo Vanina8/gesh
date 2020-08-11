@@ -13,43 +13,30 @@
      $year= $_POST['selectedYear'];
      $dias= $_POST['numeroDia'];
      $tramos= $_POST['idTramo'];
+     $idhorario= $_POST['idhorario'];
 
-     $rest= substr(trim($year), 0, 4);
+     $id='';
+     $i;
 
-     $sel = $con->query("SELECT id FROM horario WHERE semestre='$semestre' AND curso='$rest'");
+    for($i=0; $i<count($dias); $i++){
 
-     echo 'Esto el lo que devuelve la consulta :'.$sel;
-        // while ($f = $sel->fetch_assoc()) {
-        //     $temporal = $f;
-        //     array_push($resultado, $temporal);
-        // }
-
-    //  $id='';
-    //  $i;
-
-    // for($i=0; $i<count($dias); $i++){
-
-    //     $ins1 = $con -> prepare("INSERT INTO sesion VALUES(?,?,?,?,?,?,?,?)"); 
-    //     $ins1->bind_param("iiiiiiii",$id,$idaula,$tramos[$indice], $idgrupo, $idasig, $idprofe, $id_horario, $dias[$indice]);
-
-    // }
+        $ins1 = $con -> prepare("INSERT INTO sesion VALUES(?,?,?,?,?,?,?,?)"); 
+        $ins1->bind_param("iiiiiiii",$id,$idaula,$tramos[$i], $idgrupo, $idasig, $idprofe, $idhorario, $dias[$i]);
+        $res1=$ins1->execute();
+    }     
      
-    //  $res1=$ins1->execute();
-    //  $res2=$ins2->execute();
- 
-    //  if ($res1 && $res2) {
-    //      echo "success";
-    //  } else {
-    //      echo "fail";
-    //  }
+     if ($res1) {
+         echo "success";
+     } else {
+         echo "fail";
+     }
  
  }else{
      echo "fail";
  }
  $sel->close();
  $con->close();
- 
- 
+
  ?>
  
  

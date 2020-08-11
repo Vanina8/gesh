@@ -49,7 +49,6 @@
 <!--/.Navbar -->
 
 <div id="dt-basic-checkbox" class="table" cellspacing="0" width="100%" v-if="mostrarOpciones">
-        <!-- <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formRegSesion" autocomplete="off" @submit.prevent="registraSesion">   -->
 
                 <div class=" row container-fluid col-12 pt-3 justify-content-center">
                     <div class="col-4 m-1 border">
@@ -82,31 +81,30 @@
                                         <div class='row col-12 d-flex justify-content-center' v-for="(item, index) in tramoshorario" id='horario' >
                                                                                                                                   
                                                 <div class='col-2 text-center'>
-                                                    <button  class="btn p-3 btn-info cambioColor1"   v-on:dblclick="eliminaSesion(1, item.id, index)"  v-on:click="selectTramoDia('lunes', item.id, index)">                                                    
+                                                    <button  class="btn p-3 btn-info cambioColor1"  v-on:click="selectTramoDia('lunes', item.id, index)" >                                                    
                                                            {{item.inicio}}
                                                     </button>
                                                 </div>
                                                 <div class='col-2 text-center'>
-                                                    <button  class="btn p-3 btn-info cambioColor2" :class=""  v-on:click="selectTramoDia('martes', item.id, index)">                                                    
+                                                    <button  class="btn p-3 btn-info cambioColor2"  v-on:click="selectTramoDia('martes', item.id, index)">                                                    
                                                              {{item.inicio}} 
                                                     </button>
                                                 </div>
                                                 <div class='col-2 text-center'>
-                                                    <button  class="btn p-3 btn-info cambioColor3" :class=""  v-on:click="selectTramoDia('miercoles', item.id, index)">                                                    
+                                                    <button  class="btn p-3 btn-info cambioColor3"  v-on:click="selectTramoDia('miercoles', item.id, index)">                                                    
                                                              {{item.inicio}} 
                                                     </button>
                                                 </div>
                                                 <div class='col-2 text-center'>
-                                                    <button  class="btn p-3 btn-info cambioColor4" :class="" v-on:click="selectTramoDia('jueves', item.id, index)">                                                    
+                                                    <button  class="btn p-3 btn-info cambioColor4" v-on:click="selectTramoDia('jueves', item.id, index)">                                                    
                                                                {{item.inicio}} 
                                                     </button>
                                                 </div>
                                                 <div class='col-2 text-center'>
-                                                    <button  class="btn p-3 btn-info cambioColor5" :class="" v-on:click="selectTramoDia('viernes', item.id, index)">                                                    
+                                                    <button  class="btn p-3 btn-info cambioColor5" v-on:click="selectTramoDia('viernes', item.id, index)">                                                    
                                                                 {{item.inicio}} 
                                                     </button>
                                                 </div>
-
                                         </div>
                         </div>
 
@@ -115,7 +113,7 @@
                                 <nav class="navbar navbar-light mb-2">    
                                     <label class='pt-2'><strong>AULAS</strong></label>    
                                 </nav>      
-                                <div class='p-0 m-0'   >
+                                <div class='p-0 m-0' >
 
                                     <button type='button' class="btn btn-info btn-rounded m-1 cambioColorA" v-for='(item, index) in aulas' v-on:click="selectAula(item.id, index)" :id='index'>    
                                             {{ item.nombre }}
@@ -146,11 +144,8 @@
                             <button type='button' class="btn btn-info btn-rounded btn-block m-2 cambioColorP" v-for="(item, index) in datosFiltradosProfeAsig"  v-on:click="selectProfe(item.id_profe, index)" :id='item.id_profe*1000' >
                                         {{index}} - {{ item.nombre_profe }} {{item.apellido_profe}}
                             </button>
-                        </div>
-                   
+                        </div>                   
                     </div>
-                    
-                  
                 </div>
                 {{selectedAsig}}               
         <!-- </form>   -->
