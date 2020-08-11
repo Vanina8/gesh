@@ -82,7 +82,7 @@
                                         <div class='row col-12 d-flex justify-content-center' v-for="(item, index) in tramoshorario" id='horario' >
                                                                                                                                   
                                                 <div class='col-2 text-center'>
-                                                    <button  class="btn p-3 btn-info cambioColor1"  v-on:click="selectTramoDia('lunes', item.id, index)"  >                                                    
+                                                    <button  class="btn p-3 btn-info cambioColor1"   v-on:dblclick="eliminaSesion(1, item.id, index)"  v-on:click="selectTramoDia('lunes', item.id, index)">                                                    
                                                            {{item.inicio}}
                                                     </button>
                                                 </div>

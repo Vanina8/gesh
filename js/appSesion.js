@@ -27,7 +27,11 @@ const app = new Vue({
         indexProfeEncendido:'', // para revisar antes de registrar que el boton no este desactivado por siaca, no he comprobado que pueda darse el caso.
         titulosYear:[],
         selectedYear:'',       // Año del horario a registrar
-
+        sesionesCG:[],
+        idHorario:'',
+        fondo:'',
+        fondoEncendido:'btn-danger',
+        fondoApagado:'btn-info'
     },
     created(){
         this.getTitulosYear();
@@ -99,29 +103,28 @@ const app = new Vue({
             .then((res) => {
               this.profeAsig = res.data;
             });     
-          },
-        // getSesionesCursoGrupo($idgrupo, $curso, $semestre){
-        //     axios
-        //       .get("http://localhost/ghpV01/api/crud/getSesionesCurso.php/?id_grupo="+$idgrupo+"&curso="+$curso+"&semestre="+$semestre)
-        //       .then((res) => {
-        //         this.sesionesCG = res.data;
-        //         console.log('Esto es lo que trae'+this.sesionesCG);
-        //       });             
-        // },
+        },
+
+        getSesionesCursoGrupo($idgrupo, $horario){
+            axios
+              .get("http://localhost/ghpV01/api/crud/getSesionesCurso.php/?id_grupo="+$idgrupo+"&id_horario="+$horario)
+              .then((res) => {
+                this.sesionesCG = res.data;
+                console.log('Esto es lo que trae SesionCG'+this.sesionesCG);
+              });             
+        },
         getSesiones($curso, $semestre){
             axios
             .get("http://localhost/ghpV01/api/crud/getSesion.php/?curso="+$curso+"&semestre="+$semestre)
             .then((res) => {
                 this.sequeda = res.data;
+                this.idHorario= this.sequeda[0].id_horario;
+                this.getSesionesCursoGrupo(this.selectedIdGrupo, this.idHorario);
+
+                console.log('Esto es lo que carga sequeda:'+this.sequeda);
+                console.log('Id horario ahora es:'+this.idHorario);
             });             
         },
-        // getSesionesAulas(){
-        //     axios
-        //     .get("http://localhost/ghpV01/api/crud/getSesionAula.php")
-        //     .then((res) => {
-        //       return res.data;
-        //     });     
-        // },
         buscaNuevo(){
                 this.lenghtAsig = this.gruposAsig.length;
                 console.log('tamaño de array es:'+this.lenghtAsig);
@@ -129,80 +132,50 @@ const app = new Vue({
                 this.mostrarOpciones= true;
                 this.construyeTabla();
                 this.getSesiones(this.selectedYear, this.selectedSem);
-                // this.getSesionesCursoGrupo(this.selectedIdGrupo, this.selectedYear, this.selectedSem);
 
-                 console.log("estos son los valores de sesiones"+this.sequeda);
+
         },
            
         selectTramoDia($dia, $tramo, $index){
             console.log("lo que trae al metodo selectTramoDia es: "+$dia+" "+$tramo+" "+$index );
 
-            if($dia=='lunes'){
-                
-                  this.estadoLunes[$index] = !this.estadoLunes[$index];
-  
-                  if(this.estadoLunes[$index]){
-                      this.apagarBoton('cambioColor1', $index);
-                      this.eliminaDiaTramoEncendido(1, $tramo);
-                  }else{
-                      this.encenderBoton('cambioColor1', $index);
-                      this.agregarDiaYTramo(1, $tramo);
-                  }                               
+            diaNumero=this.dameNumeroDia($dia);
+
+            console.log(' este es el dia devuelto a enviar:'+diaNumero);
+
+            var encontrado=null;
+            encontrado = this.diaYTramoOcupado(diaNumero, $tramo)
+
+            console.log('Lo que tiene encontrado es:'+encontrado);
+
+            if(encontrado!=''){      
+                this.botonesDTOcupados(encontrado, $dia, $index);
+            }else{
+                this.botonesDTDisponibles(diaNumero, $tramo, $index);
             }
-            if($dia=='martes'){
+          },
 
-                 this.estadoMartes[$index] = !this.estadoMartes[$index];
+          botonesDTOcupados($idSesion, $dia, $index){
+              console.log(' aca entra a botones ocupados');
 
-                if(this.estadoMartes[$index]){
-
-                    this.apagarBoton('cambioColor2', $index);
-                    this.eliminaDiaTramoEncendido(2, $tramo);
-                }else{
-                    this.encenderBoton('cambioColor2', $index);
-                    this.agregarDiaYTramo(2, $tramo);
-                }               
-            }
-            if($dia=='miercoles'){
-
-                this.estadoMiercoles[$index] = !this.estadoMiercoles[$index];
-
-                if(this.estadoMiercoles[$index]){
-
-                    this.apagarBoton('cambioColor3', $index);
-                    this.eliminaDiaTramoEncendido(3, $tramo);
-                }else{
-                    this.encenderBoton('cambioColor3', $index);
-                    this.agregarDiaYTramo(3, $tramo);
-                  }               
-            }
-            if($dia=='jueves'){
-             
-                this.estadoJueves[$index] = !this.estadoJueves[$index];
-
-                if(this.estadoJueves[$index]){
-
-                  this.apagarBoton('cambioColor4', $index);
-                  this.eliminaDiaTramoEncendido(4, $tramo);
-                }else{
-                  this.encenderBoton('cambioColor4', $index);
-                  this.agregarDiaYTramo(4, $tramo);
-                }               
+              if(this.eliminaSesion($idSesion)){
+                console.log(' ahora cambiara el color del boton con sesion eliminada');
+                  if($dia==1){
+                    this.apagarBoton( 'cambioColor1' , $index);
+                  }
+                  if($dia==2){
+                    this.apagarBoton( 'cambioColor2' , $index);
+                  }
+                  if($dia==3){
+                    this.apagarBoton( 'cambioColor3' , $index);
+                  }
+                  if($dia==4){
+                    this.apagarBoton( 'cambioColor4' , $index);
+                  }
+                  if($dia==5){
+                    this.apagarBoton( 'cambioColor5' , $index);
+                  }
               }
-              if($dia=='viernes'){
-              
-                this.estadoViernes[$index] = !this.estadoViernes[$index];
-
-                if(this.estadoViernes[$index]){
-
-                  this.apagarBoton('cambioColor5', $index);
-                  this.eliminaDiaTramoEncendido(5, $tramo);
-                }else{
-                  this.encenderBoton('cambioColor5', $index);
-                  this.agregarDiaYTramo(5, $tramo);
-                }                          
-              }
-                this.revisaEstadoAula();
-                this.revisaEstadoProfe();
           },
           agregarDiaYTramo($dia, $tramo){
                 this.numeroDia.push($dia);
@@ -398,6 +371,43 @@ const app = new Vue({
               // las otras tablas de indices con sesion estan en veremos, no parecen ser necesarias
 
           },
+          eliminaSesion($idsesion){
+
+              console.log('esto es lo que trae idsesion:'+$idsesion);
+            
+              Swal.fire({
+                title: 'Esta seguro de borrar?',
+                text: "No podras revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.value) {
+                    axios
+                      .get("http://localhost/ghpV01/api/crud/eliminarSesion.php/?id="+$idsesion)
+                      .then((res) => {
+                        Swal.fire(
+                          'Borrado!',
+                          'La sesión ha sido eliminada.',
+                          'success'
+                        )      
+                      }); 
+                      this.getSesiones(this.selectedYear, this.selectedSem);
+                      return true;                          
+                }else{
+                  console.log(' aca estoy en eliminacion rechazada');
+                  return false;
+                }
+              })
+
+
+              // necesito: idGrupo, idhorario, iddia, idtramo
+              // ejecutar funcion php para eliminar en la bd
+              // ejecutar funcion de revisar botones de tramos para marcarlos con color de ocupados si hay sesiones en esos tramos y dias
+
+          },
           alCambiarAsig(){
               if(this.profeEncendido){
                   this.apagarBoton('cambioColorP', this.indexProfeEncendido);
@@ -427,6 +437,21 @@ const app = new Vue({
                       }
                   }            
                }    
+          },
+          diaYTramoOcupado($dia, $id_tramo){
+            var v= this.encontrado($dia, $id_tramo);
+            console.log(' esto es lo que devuelve la busqueda:'+v);
+            return v;
+          },
+          encontrado($dia, $tramo){
+              console.log(' estos parametro son los que vienen: dia'+$dia+' tramo '+$tramo);
+              for(elemento of this.sesionesCG){
+                console.log('esto tiene value.dia:'+elemento.dia+ ' tramo id es:'+elemento.t_id);
+                if(elemento.dia == $dia && elemento.t_id== $tramo){
+                  return elemento.id;
+                }
+              }
+              return '';
           },
           verHorario(){
               console.log('ver horario');
@@ -460,7 +485,73 @@ const app = new Vue({
           aulaValida(){
             if(document.getElementById(this.idaulaEncendida).hasAttribute("disabled")) return true;
             return false;            
-          }
+          },
+
+          enciendeOApaga($estado, $clase, $dia, $tramo, $index){
+
+            if($estado){
+              this.apagarBoton($clase, $index);
+              this.eliminaDiaTramoEncendido($dia, $tramo);
+            }else{
+              this.encenderBoton($clase, $index);
+              this.agregarDiaYTramo($dia, $tramo);
+            }  
+          },
+          botonesDTDisponibles($dia, $tramo, $index){
+            console.log('aca entra a botones disponibles');
+            if($dia==1){
+                
+              this.estadoLunes[$index] = !this.estadoLunes[$index];
+              this.enciendeOApaga(this.estadoLunes[$index], 'cambioColor1', 1, $tramo, $index);
+            }
+            if($dia==2){
+
+               this.estadoMartes[$index] = !this.estadoMartes[$index];
+               this.enciendeOApaga(this.estadoMartes[$index], 'cambioColor2', 2, $tramo, $index);
+            }
+            if($dia==3){
+
+              this.estadoMiercoles[$index] = !this.estadoMiercoles[$index];
+              this.enciendeOApaga(this.estadoMiercoles[$index], 'cambioColor3', 3, $tramo, $index);
+            }
+            if($dia==4){
+         
+                this.estadoJueves[$index] = !this.estadoJueves[$index];
+                this.enciendeOApaga(this.estadoJueves[$index], 'cambioColor4', 4, $tramo, $index);
+            }
+            if($dia==5){
+          
+                this.estadoViernes[$index] = !this.estadoViernes[$index];
+                this.enciendeOApaga(this.estadoViernes[$index], 'cambioColor5', 5, $tramo, $index);
+            }
+           
+            this.revisaEstadoAula();
+            this.revisaEstadoProfe();
+          },
+          dameNumeroDia($dia){
+            console.log(' esto es el dia que llega:'+$dia);
+            var devuelve;
+            switch ($dia.toLowerCase()) {
+              case 'lunes':
+                devuelve=1;
+                break;
+              case 'martes':
+                devuelve=2;
+                break;
+              case 'miercoles':
+                devuelve=3;
+                break;
+              case 'jueves':
+                devuelve=4;
+                break;
+              case 'viernes':
+                 devuelve=5;
+                 break;
+              default:
+                devuelve='';      
+            }
+            return devuelve;
+          },
     }
 })
 
