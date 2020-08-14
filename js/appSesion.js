@@ -28,7 +28,7 @@ const app = new Vue({
         titulosYear:[],
         selectedYear:'',       // Año del horario a registrar
         sesionesCG:[],
-        idHorario:'',
+        idHorario: -1,
     },
     created(){
         this.getTitulosYear();
@@ -98,10 +98,12 @@ const app = new Vue({
         },
 
         getSesionesCursoGrupo($idgrupo, $horario){
+            console.log('aca entra a getSesionesCursoGrupo');
             axios
               .get("http://localhost/ghpV01/api/crud/getSesionesCurso.php/?id_grupo="+$idgrupo+"&id_horario="+$horario)
               .then((res) => {
                 this.sesionesCG = res.data;
+                console.log(' aca se supone que va a ir a iniciaTabalDias()');
                 this.iniciaTablaDias();
               });             
         },
@@ -111,11 +113,13 @@ const app = new Vue({
             .then((res) => {
                 this.sequeda = res.data;
                 if(this.sequeda.length>0){
+                    console.log(' sequeda trae mas de 1 elemento');
                     this.idHorario= this.sequeda[0].id_horario;
-                    this.getSesionesCursoGrupo(this.selectedIdGrupo, this.idHorario);
                 }else{
-                  this.iniciaTablaDias();
+                  console.log(' sequeda trae 0 elementos');
+                  this.idHorario= -1;
                 }
+                this.getSesionesCursoGrupo(this.selectedIdGrupo, this.idHorario);
             });             
         },
         buscaNuevo(){
@@ -157,15 +161,41 @@ const app = new Vue({
                   }
               }
           },
-          agregarDiaYTramo($dia, $tramo){
-                this.numeroDia.push($dia);
-                this.idTramo.push($tramo);
+          botonesDTDisponibles($dia, $tramo, $index){
+            if($dia==1){
+                
+              this.estadoLunes[$index] = !this.estadoLunes[$index];
+              this.enciendeOApaga(this.estadoLunes[$index], 'cambioColor1', 1, $tramo, $index);
+            }
+            if($dia==2){
+              this.estadoMartes[$index] = !this.estadoMartes[$index];
+               this.enciendeOApaga(this.estadoMartes[$index], 'cambioColor2', 2, $tramo, $index);
+            }
+            if($dia==3){
+
+              this.estadoMiercoles[$index] = !this.estadoMiercoles[$index];
+              this.enciendeOApaga(this.estadoMiercoles[$index], 'cambioColor3', 3, $tramo, $index);
+            }
+            if($dia==4){
+         
+                this.estadoJueves[$index] = !this.estadoJueves[$index];
+                this.enciendeOApaga(this.estadoJueves[$index], 'cambioColor4', 4, $tramo, $index);
+            }
+            if($dia==5){
+          
+                this.estadoViernes[$index] = !this.estadoViernes[$index];
+                this.enciendeOApaga(this.estadoViernes[$index], 'cambioColor5', 5, $tramo, $index);
+            }
+           
+            this.revisaEstadoAula();
+            this.revisaEstadoProfe();
           },
           apagarBoton($clases, $index){
-
-              var x = document.getElementsByClassName($clases);
-              x[$index].classList.add('btn-info');
-              x[$index].classList.remove('btn-danger');
+            console.log('aca va a apagar boton '+$clases+' '+$index);
+            var x = document.getElementsByClassName($clases);
+            x[$index].classList.add('btn-info');
+            x[$index].classList.remove('btn-danger');
+            x[$index].classList.remove('btn-secondary');
 
           },
           encenderBoton($clases, $index){
@@ -173,7 +203,13 @@ const app = new Vue({
               var x =document.getElementsByClassName($clases);
               x[$index].classList.add('btn-danger');
               x[$index].classList.remove('btn-info');
+              x[$index].classList.remove('btn-secondary');
 
+          },
+
+          agregarDiaYTramo($dia, $tramo){
+                this.numeroDia.push($dia);
+                this.idTramo.push($tramo);
           },
           selectAula($idaula, $index){
 
@@ -202,15 +238,6 @@ const app = new Vue({
                   this.estadoViernes.push(true);
             }
         },
-        estadoAulas($id_aula, $dia, $id_tramo){
-            var i;
-            for( i = 0; i < this.sequeda.length; i++){
-                if(this.sequeda[i].dia==$dia && this.sequeda[i].t_id== $id_tramo && this.sequeda[i].a_id==$id_aula){
-                    return true;
-                }
-            }
-            return false;
-          },
           estadoProfe($id_profe, $dia, $id_tramo){
             var i;
             for( i = 0; i < this.sequeda.length; i++){
@@ -220,6 +247,15 @@ const app = new Vue({
             }
             return false;
           },
+          eliminaTodosElemenDiayTramo(){
+              var auxD, auxT ;
+              auxD = numeroDia;
+              auxT= idTramo;
+              for(indice in auxD ){
+                this.eliminaDiaTramoEncendido(auxD[indice], auxT[indice]);
+              }
+          },
+
           eliminaDiaTramoEncendido($ndia,$tramo){
             var pos='';
             var i;
@@ -247,10 +283,23 @@ const app = new Vue({
                        
                         var x = document.getElementById(i);
                         if(this.estadoAulas(this.aulas[i].id, this.numeroDia[j],this.idTramo[j])){
+                          console.log('estado de aula resulta true');
                             x.setAttribute('disabled', '');  
                         }
                     }            
                  }                       
+          },
+          estadoAulas($id_aula, $dia, $id_tramo){
+            console.log('estos son los parametros que recibe estadoAula:'+$id_aula+" "+$dia+" "+$id_tramo);
+
+            var i;
+            for( i = 0; i < this.sequeda.length; i++){
+                if(this.sequeda[i].dia==$dia && this.sequeda[i].t_id== $id_tramo && this.sequeda[i].a_id==$id_aula){
+                  console.log(' aca consigue la coincidencia:'+this.sequeda[i].dia+' es igual a:'+$dia+" y "+this.sequeda[i].t_id+" es igual a:"+$id_tramo+" y "+this.sequeda[i].a_id+" es igual a: "+$id_aula);
+                    return true;
+                }
+            }
+            return false;
           },
           selectProfe($idProfe, $index){
 
@@ -318,28 +367,17 @@ const app = new Vue({
                    return;
              }
 
-               console.log(' esta es la cantidad y elementos de array numeroDia:'+this.numeroDia.length+' '+this.numeroDia);
-               console.log('la asignatura elejida es: '+this.selectedAsig);
-               console.log('el profe y aula elegidos son:'+this.idProfeEncendido+' '+this.idaulaEncendida);
-               console.log(' esta todo ok, sin problemas para grabar');
-                params={ 
-                  selectedIdGrupo: this.selectedIdGrupo, 
-                  selectedSem: this.selectedSem, 
-                  selectedAsig: this.selectedAsig, 
-                  idaulaEncendida: this.idAulaEncendida, 
-                  idProfeEncendido: this.idProfeEncendido, 
-                  idTramo: this.idTramo, 
-                  numeroDia: this.numeroDia, 
-                  selectedYear: this.selectedYear, 
-                  idhorario: this.idhorario
-                }
+              const form = document.getElementById("formNuevaSesion");    
 
-              axios.post('../api/Registro/sesion.php', params) 
+              axios.post('../api/Registro/sesion.php', new FormData(form)) 
               .then( res =>{
                   this.respuesta = res.data
-                  if (res.data == 'success') {           
+                  if (this.respuesta.trim() == 'success') {           
+                      this.getSesiones(this.selectedYear, this.selectedSem);
+                      this.eliminaDiaTramoEncendido();
+                      this.iniciaTablaDias();
+                      Swal.fire('Registrado', 'La sesión ha sido guardada', 'success')      
 
-                    this.iniciaTablaDias();
                   } else {
                       swal.fire('No se pudo registrar la sesión', ''+res.data)
                   }                  
@@ -371,13 +409,14 @@ const app = new Vue({
                     axios
                       .get("http://localhost/ghpV01/api/crud/eliminarSesion.php/?id="+$idsesion)
                       .then((res) => {
-                        this.getSesiones(this.selectedYear, this.selectedSem);
-  
+                        this.getSesiones(this.selectedYear, this.selectedSem);  
                         Swal.fire(
                           'Borrado!',
                           'La sesión ha sido eliminada.',
                           'success'
                         )      
+                        this.iniciaTablaDias();
+
                         return true;                          
 
                       }); 
@@ -424,6 +463,7 @@ const app = new Vue({
           encontrado($dia, $tramo){
               for(elemento of this.sesionesCG){
                 if(elemento.dia == $dia && elemento.t_id== $tramo){
+                    console.log('aca se encontro el dia y tramo en tabla sesionesCG')
                   return elemento.id;
                 }
               }
@@ -464,35 +504,6 @@ const app = new Vue({
               this.agregarDiaYTramo($dia, $tramo);
             }  
           },
-          botonesDTDisponibles($dia, $tramo, $index){
-            if($dia==1){
-                
-              this.estadoLunes[$index] = !this.estadoLunes[$index];
-              this.enciendeOApaga(this.estadoLunes[$index], 'cambioColor1', 1, $tramo, $index);
-            }
-            if($dia==2){
-              this.estadoMartes[$index] = !this.estadoMartes[$index];
-               this.enciendeOApaga(this.estadoMartes[$index], 'cambioColor2', 2, $tramo, $index);
-            }
-            if($dia==3){
-
-              this.estadoMiercoles[$index] = !this.estadoMiercoles[$index];
-              this.enciendeOApaga(this.estadoMiercoles[$index], 'cambioColor3', 3, $tramo, $index);
-            }
-            if($dia==4){
-         
-                this.estadoJueves[$index] = !this.estadoJueves[$index];
-                this.enciendeOApaga(this.estadoJueves[$index], 'cambioColor4', 4, $tramo, $index);
-            }
-            if($dia==5){
-          
-                this.estadoViernes[$index] = !this.estadoViernes[$index];
-                this.enciendeOApaga(this.estadoViernes[$index], 'cambioColor5', 5, $tramo, $index);
-            }
-           
-            this.revisaEstadoAula();
-            this.revisaEstadoProfe();
-          },
           dameNumeroDia($dia){
             var devuelve;
             switch ($dia.toLowerCase()) {
@@ -522,26 +533,38 @@ const app = new Vue({
             for (indice in this.tramoshorario){
                 if(this.encontrado(1, this.tramoshorario[indice].id)>0){
                     this.ocupadoBoton('cambioColor1', indice);
+                }else{
+                  this.apagarBoton('cambioColor1', indice);
                 }
                 if(this.encontrado(2, this.tramoshorario[indice].id)>0){
                     this.ocupadoBoton('cambioColor2', indice);
+                }else{
+                  this.apagarBoton('cambioColor2', indice);
                 }
                 if(this.encontrado(3, this.tramoshorario[indice].id)>0){
                     this.ocupadoBoton('cambioColor3', indice);
+                }else{
+                  this.apagarBoton('cambioColor3', indice);
                 }
                 if(this.encontrado(4, this.tramoshorario[indice].id)>0){
                     this.ocupadoBoton('cambioColor4', indice);
+                }else{
+                  this.apagarBoton('cambioColor4', indice);
                 }
                 if(this.encontrado(5, this.tramoshorario[indice].id)>0){
                   this.ocupadoBoton('cambioColor5', indice);
+                }else{
+                  this.apagarBoton('cambioColor5', indice);
                 }
             }
           },
+
           ocupadoBoton($clases, $index){ // boton ocupado
             console.log('Viene a ocupadoBoton con los parametros:'+$clases,+' '+$index);
             var x = document.getElementsByClassName($clases);
             x[$index].classList.add('btn-secondary');
             x[$index].classList.remove('btn-info');
+            x[$index].classList.remove('btn-danger');
           },
 
           verHorario(){

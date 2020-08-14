@@ -7,7 +7,7 @@
 
 <!-- Navbar-->
 <nav class="navbar navbar-light">
-    <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formNuevaSesion" autocomplete="off" @submit.prevent="buscaNuevo">                              
+    <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formNuevaSesion" autocomplete="off" @submit.prevent="registraSesion">                              
         
         <label for="" class="pr-2"> Grupo:</label>
 
@@ -33,13 +33,23 @@
                 </option>
             </select>
         
-        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Empezar</button>
 
+        <input type="hidden" name="selectedIdGrupo" v-model='selectedIdGrupo'>
+        <input type="hidden" name="selectedSem" v-model='selectedSem'>
+        <input type="hidden" name="selectedAsig" v-model='selectedAsig'>
+        <input type="hidden" name="idaulaEncendida" v-model='idaulaEncendida'> 
+        <input type="hidden" name="idProfeEncendido" v-model='idProfeEncendido'>
+        <input type="hidden" name="idTramo" v-model='idTramo'>
+        <input type="hidden" name="numeroDia" v-model='numeroDia'>
+        <input type="hidden" name="selectedYear" v-model='selectedYear'>
+        <input type="hidden" name="idHorario" v-model='idHorario'>
+
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='buscaNuevo'>Empezar</button>
         Grupo: {{selectedIdGrupo}} Curso: {{selectedYear}} Semestre: {{selectedSem}}
 
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='verHorario()'>Visualizar</button>
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Registrar</button>
 
-        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='registraSesion()'>Registrar</button>
 
     </form>
     <div class='d-flex justify-content-right' >

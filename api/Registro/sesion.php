@@ -1,42 +1,71 @@
 
 <?php
- 
- require_once("../conexion.php");
   
  if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
-     $idgrupo= $_POST['selectedIdGrupo'];
-     $semestre= $_POST['selectedSem'];
-     $idasig= $_POST['selectedAsig'];
-     $idaula= $_POST['idAulaEncendida'];
-     $idprofe= $_POST['idProfeEncendido'];
-     $year= $_POST['selectedYear'];
-     $dias= $_POST['numeroDia'];
-     $tramos= $_POST['idTramo'];
-     $idhorario= $_POST['idhorario'];
-
-     $id='';
-     $i;
-
-    for($i=0; $i<count($dias); $i++){
-
-        $ins1 = $con -> prepare("INSERT INTO sesion VALUES(?,?,?,?,?,?,?,?)"); 
-        $ins1->bind_param("iiiiiiii",$id,$idaula,$tramos[$i], $idgrupo, $idasig, $idprofe, $idhorario, $dias[$i]);
-        $res1=$ins1->execute();
-    }     
-     
-     if ($res1) {
-         echo "success";
-     } else {
-         echo "fail";
-     }
+    grabar();
  
  }else{
      echo "fail";
  }
- $sel->close();
- $con->close();
+ 
+ function grabar(){
 
- ?>
+    require_once("../conexion.php");
+    require_once("horario.php");
+ 
+           $idgrupo= $_POST['selectedIdGrupo'];
+            $semestre= $_POST['selectedSem'];
+            $idasig= $_POST['selectedAsig'];
+            $idaula= $_POST['idaulaEncendida'];
+            $idprofe= $_POST['idProfeEncendido'];
+            $year= $_POST['selectedYear'];
+            $dias= $_POST['numeroDia'];
+            $tramos= $_POST['idTramo'];
+            $idhorario= $_POST['idHorario'];
+            $curso=$_POST['curso'];
+            $semestre= $_POST['seme'];
+           
+        if($idhorario==-1){
+            $idhorario = traeIdHorario($curso, $semestre, $con);
+        }
+
+        if($idhorario==''){
+            echo 'fail';
+            $con->close();
+            return;
+        }
+
+        $dArray= explode(',', $dias);
+        $tArray= explode(',', $tramos);
+        $id='';
+        $i;
+
+        if(count($dArray)>1){
+ 
+            for($i=0; $i<count($dArray); $i++){
+
+                echo ' entro a varios elementos';
+
+                $d=$dArray[$i];
+                $t=$tArray[$i];
+                $ins1 = $con -> prepare("INSERT INTO sesion VALUES(?,?,?,?,?,?,?,?)"); 
+                $ins1->bind_param("iiiiiiii",$id,$idaula, $t, $idgrupo, $idasig, $idprofe, $idhorario, $d );
+                $res1=$ins1->execute();
+            }     
+        }else{
+            echo ' entro a 1 elementos';
+
+            $ins1 = $con -> prepare("INSERT INTO sesion VALUES(?,?,?,?,?,?,?,?)"); 
+            $ins1->bind_param("iiiiiiii",$id, $idaula, $tArray[0], $idgrupo, $idasig, $idprofe, $idhorario, $dArray[0]);
+            $res1=$ins1->execute();
+        }        
+        $v = ($res1) ? 'success' : 'fail';
+        echo $v;
+        echo 'res1 es:'.$res1;
+        $con->close();
+}
+
+
+?>
  
  
