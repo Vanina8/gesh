@@ -81,8 +81,16 @@
     padding-right: 50px;
 }
 
+#ocupado{
+  background-color: violet;
+}
+#desocupado{
+background-color: cornflowerblue ;
+}
+#elegido{
+  background-color: crimson;
 
-
+}
   @media (min-width: 768px) {
     #sidebar-wrapper {
       margin-left: 0;

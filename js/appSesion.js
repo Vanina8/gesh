@@ -38,8 +38,20 @@ const app = new Vue({
         this.getGruposAsig();
         this.getProfesAsig();
     },
+    watch:{
+      selectedIdGrupo(newVal, oldVal){
+        if(this.selectedYear!='' && this.selectedSem!=''){
+          Swal.fire(
+            'Reiniciará el panel',
+            '',
+            'warning'
+          )
+          this.buscaNuevo();
+        }
+      }
+    },
     computed:{
-     
+
         datosFiltradosGA(){   // muestra sólo asignaturas del grupo elegido en registrar nueva sesión
             return this.gruposAsig.filter((filtro)=>{
               return filtro.id_grupo.match(this.selectedIdGrupo) 
@@ -104,19 +116,20 @@ const app = new Vue({
               .then((res) => {
                 this.sesionesCG = res.data;
                 console.log(' aca se supone que va a ir a iniciaTabalDias()');
-                this.iniciaTablaDias();
+                this.reiniciaPanel();
+
               });             
         },
-        getSesiones($curso, $semestre){
+        getSesiones($curso, $semestre, $horario){
             axios
-            .get("http://localhost/ghpV01/api/crud/getSesion.php/?curso="+$curso+"&semestre="+$semestre)
+            .get("http://localhost/ghpV01/api/crud/getSesion.php/?curso="+$curso+"&semestre="+$semestre+"&idhorario="+$horario)
             .then((res) => {
                 this.sequeda = res.data;
                 if(this.sequeda.length>0){
-                    console.log(' sequeda trae mas de 1 elemento');
+                    console.log(' sequeda trae mas de 1 elemento'+res.data);
                     this.idHorario= this.sequeda[0].id_horario;
                 }else{
-                  console.log(' sequeda trae 0 elementos');
+                  console.log(' sequeda trae 0 elementos'+res.data);
                   this.idHorario= -1;
                 }
                 this.getSesionesCursoGrupo(this.selectedIdGrupo, this.idHorario);
@@ -126,7 +139,7 @@ const app = new Vue({
                 this.lenghtAsig = this.gruposAsig.length;
                 this.mostrarOpciones= true;
                 this.construyeTabla();
-                this.getSesiones(this.selectedYear, this.selectedSem);
+                this.getSesiones(this.selectedYear, this.selectedSem, this.idHorario);
         },
            
         selectTramoDia($dia, $tramo, $index){
@@ -191,7 +204,6 @@ const app = new Vue({
             this.revisaEstadoProfe();
           },
           apagarBoton($clases, $index){
-            console.log('aca va a apagar boton '+$clases+' '+$index);
             var x = document.getElementsByClassName($clases);
             x[$index].classList.add('btn-info');
             x[$index].classList.remove('btn-danger');
@@ -283,19 +295,16 @@ const app = new Vue({
                        
                         var x = document.getElementById(i);
                         if(this.estadoAulas(this.aulas[i].id, this.numeroDia[j],this.idTramo[j])){
-                          console.log('estado de aula resulta true');
                             x.setAttribute('disabled', '');  
                         }
                     }            
                  }                       
           },
           estadoAulas($id_aula, $dia, $id_tramo){
-            console.log('estos son los parametros que recibe estadoAula:'+$id_aula+" "+$dia+" "+$id_tramo);
 
             var i;
             for( i = 0; i < this.sequeda.length; i++){
                 if(this.sequeda[i].dia==$dia && this.sequeda[i].t_id== $id_tramo && this.sequeda[i].a_id==$id_aula){
-                  console.log(' aca consigue la coincidencia:'+this.sequeda[i].dia+' es igual a:'+$dia+" y "+this.sequeda[i].t_id+" es igual a:"+$id_tramo+" y "+this.sequeda[i].a_id+" es igual a: "+$id_aula);
                     return true;
                 }
             }
@@ -373,9 +382,8 @@ const app = new Vue({
               .then( res =>{
                   this.respuesta = res.data
                   if (this.respuesta.trim() == 'success') {           
-                      this.getSesiones(this.selectedYear, this.selectedSem);
-                      this.eliminaDiaTramoEncendido();
-                      this.iniciaTablaDias();
+                      this.getSesiones(this.selectedYear, this.selectedSem, this.idHorario);
+                      
                       Swal.fire('Registrado', 'La sesión ha sido guardada', 'success')      
 
                   } else {
@@ -409,13 +417,13 @@ const app = new Vue({
                     axios
                       .get("http://localhost/ghpV01/api/crud/eliminarSesion.php/?id="+$idsesion)
                       .then((res) => {
-                        this.getSesiones(this.selectedYear, this.selectedSem);  
+                        this.getSesiones(this.selectedYear, this.selectedSem, this.idHorario);  
                         Swal.fire(
                           'Borrado!',
                           'La sesión ha sido eliminada.',
                           'success'
                         )      
-                        this.iniciaTablaDias();
+                        // this.iniciaTablaDias();
 
                         return true;                          
 
@@ -463,7 +471,6 @@ const app = new Vue({
           encontrado($dia, $tramo){
               for(elemento of this.sesionesCG){
                 if(elemento.dia == $dia && elemento.t_id== $tramo){
-                    console.log('aca se encontro el dia y tramo en tabla sesionesCG')
                   return elemento.id;
                 }
               }
@@ -558,7 +565,12 @@ const app = new Vue({
                 }
             }
           },
-
+          reiniciaPanel(){
+            this.eliminaDiaTramoEncendido();
+            this.iniciaTablaDias();
+            this.revisaEstadoAula();
+            this.revisaEstadoProfe();
+          },
           ocupadoBoton($clases, $index){ // boton ocupado
             console.log('Viene a ocupadoBoton con los parametros:'+$clases,+' '+$index);
             var x = document.getElementsByClassName($clases);

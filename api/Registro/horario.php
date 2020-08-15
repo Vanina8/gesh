@@ -1,8 +1,13 @@
 
 <?php
 
+
+
+// echo ' entra a horario.php';
+
 function traeIdHorario($curso, $semestre, $con){
 
+    // echo ' aca entro a traeIdHorario';
     $cursoCortado = (strlen($curso)>4) ? substr($curso, 0, 4) : $curso ;
 
     $consulta="SELECT * FROM horario WHERE curso='$cursoCortado' AND semestre='$semestre'";

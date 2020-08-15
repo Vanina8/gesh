@@ -45,9 +45,9 @@
         <input type="hidden" name="idHorario" v-model='idHorario'>
 
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='buscaNuevo'>Empezar</button>
-        Grupo: {{selectedIdGrupo}} Curso: {{selectedYear}} Semestre: {{selectedSem}}
+        <!-- Grupo: {{selectedIdGrupo}} Curso: {{selectedYear}} Semestre: {{selectedSem}} -->
 
-        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='verHorario()'>Visualizar</button>
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" data-toggle="modal" data-target="#modalVisualiza" v-on:click='verHorario()'>Visualizar</button>
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Registrar</button>
 
 
@@ -118,7 +118,7 @@
                                         </div>
                         </div>
 
-                        <div class="col-12 mt-4 ">
+                        <div class="col-12 mt-4 mb-3">
                             <div class="d-block justify-content-center">
                                 <nav class="navbar navbar-light mb-2">    
                                     <label class='pt-2'><strong>AULAS</strong></label>    
@@ -157,9 +157,106 @@
                         </div>                   
                     </div>
                 </div>
-                {{selectedAsig}}               
-        <!-- </form>   -->
+<div class='row container-fluid justify-content-center col-12 border'>
+    <h4 class='col-2'>Ocupado:</h4><div class='col-1'><button class="btn btn-secondary"></button></div>
+    <h4 class='col-2'>Desocupado:</h4><div class='col-1'><button class="btn btn-info"></button></div>
+    <h4 class='col-2'>Elegido:</h4><div class='col-1'><button class="btn btn-danger"></button></div>
 </div>
+
+
+</div>
+
+
+
+<!-- Modal nuevo titulo -->
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="modalVisualiza" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"> -->
+<div class="modal fade" id="modalVisualiza"  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+
+  <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <!-- Form -->
+    <form class="text-center" style="color: #757575;"  id="formCatAula" autocomplete="off" @submit.prevent="registroCatAula">                              
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Visualiza horario del grupo</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+            
+            <div class="col-12 d-block justify-content-center">
+                        
+                        <div class='row col-12 pt-4  justify-content-center' >                                        
+                            <nav class="navbar navbar-light "> 
+                                <div class='col-2'>
+                                    <label class='text-center'> <strong> Lunes</strong></label>  
+                                </div>
+                                <div class='col-2'>
+                                    <label class='text-center' > <strong> Martes</strong></label>  
+                                </div>
+                                <div class='col-2'>
+                                    <label class='text-center' > <strong> Miercoles</strong></label>  
+                                </div>
+                                <div class='col-2'>
+                                    <label class='text-center' > <strong> Jueves</strong></label>  
+                                </div>
+                                <div class='col-2'>
+                                    <label class='text-center' > <strong> Viernes</strong></label>  
+                                </div>
+                            </nav>
+                        </div>
+
+                        <div class='row col-12 d-flex justify-content-center' v-for="(item, index) in tramoshorario" id='horario' >
+                                                                                                                  
+                                <div class='col-2 text-center'>
+                                    <button  class="btn p-3 btn-info cambioColor1"  v-on:click="selectTramoDia('lunes', item.id, index)" >                                                    
+                                           {{item.inicio}}
+                                    </button>
+                                </div>
+                                <div class='col-2 text-center'>
+                                    <button  class="btn p-3 btn-info cambioColor2"  v-on:click="selectTramoDia('martes', item.id, index)">                                                    
+                                             {{item.inicio}} 
+                                    </button>
+                                </div>
+                                <div class='col-2 text-center'>
+                                    <button  class="btn p-3 btn-info cambioColor3"  v-on:click="selectTramoDia('miercoles', item.id, index)">                                                    
+                                             {{item.inicio}} 
+                                    </button>
+                                </div>
+                                <div class='col-2 text-center'>
+                                    <button  class="btn p-3 btn-info cambioColor4" v-on:click="selectTramoDia('jueves', item.id, index)">                                                    
+                                               {{item.inicio}} 
+                                    </button>
+                                </div>
+                                <div class='col-2 text-center'>
+                                    <button  class="btn p-3 btn-info cambioColor5" v-on:click="selectTramoDia('viernes', item.id, index)">                                                    
+                                                {{item.inicio}} 
+                                    </button>
+                                </div>
+                        </div>
+        </div>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+            </div>
+
+    </from>
+
+    </div>
+  </div>
+</div>
+
+
 
   <!-- <div class="row modal-body col-12">
                   <div class='col-5'>

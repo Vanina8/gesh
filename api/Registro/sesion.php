@@ -5,14 +5,15 @@
     grabar();
  
  }else{
-     echo "fail";
+
+    echo "fail";
  }
  
  function grabar(){
 
-    require_once("../conexion.php");
-    require_once("horario.php");
- 
+    include '../conexion.php';
+    include 'horario.php';
+    
            $idgrupo= $_POST['selectedIdGrupo'];
             $semestre= $_POST['selectedSem'];
             $idasig= $_POST['selectedAsig'];
@@ -39,12 +40,10 @@
         $tArray= explode(',', $tramos);
         $id='';
         $i;
-
         if(count($dArray)>1){
  
             for($i=0; $i<count($dArray); $i++){
 
-                echo ' entro a varios elementos';
 
                 $d=$dArray[$i];
                 $t=$tArray[$i];
@@ -53,7 +52,6 @@
                 $res1=$ins1->execute();
             }     
         }else{
-            echo ' entro a 1 elementos';
 
             $ins1 = $con -> prepare("INSERT INTO sesion VALUES(?,?,?,?,?,?,?,?)"); 
             $ins1->bind_param("iiiiiiii",$id, $idaula, $tArray[0], $idgrupo, $idasig, $idprofe, $idhorario, $dArray[0]);
@@ -61,7 +59,6 @@
         }        
         $v = ($res1) ? 'success' : 'fail';
         echo $v;
-        echo 'res1 es:'.$res1;
         $con->close();
 }
 
