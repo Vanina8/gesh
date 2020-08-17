@@ -25,7 +25,7 @@
                         <!-- Nombre -->
                         <div class="form-row ">
                                 <div class="md-form text-center container-fluid col-5">
-                                    <input type="text" id="materialRegisterFormFirstName" class="form-control" required  name="nombre">
+                                    <input type="text" id="materialRegisterFormFirstName" class="form-control" required  name="nombre" autofocus>
                                     <label for="materialRegisterFormFirstName">Nombre</label>
                                 </div>
                         </div>
@@ -139,7 +139,10 @@
                                 <td>{{item.id}}</td>
                                 <td>{{item.nombre}}</td>
                                 <td>{{item.categoria}}</td>
-                                <td>{{item.estado}}</td>
+                                <td class="blue-text pb-2 text-center" v-if="item.estado==0"><strong>{{etiquetaEstadoA}}</strong></td>
+                                <td class="blue-text pb-2 text-center" v-if="item.estado==1"><strong>{{etiquetaEstadoB}}</strong></td>
+
+                                <!-- <td>{{item.estado}}</td> -->
                                 <td><a class='btn btn-danger btn-sm' href="#" @click="eliminarAula(item.id)"><i class="fas fa-trash"></i></a></td>
                             </tr>            
                     </table>
@@ -173,7 +176,7 @@
             
                         <div class="form-row">                
                             <div class="md-form col-8 container-fluid">
-                                <input type="text" id="materialRegisterFormEmail" required class="form-control" name="nombre" value="">
+                                <input type="text" id="materialRegisterFormEmail" required class="form-control" name="nombre" value="" autofocus>
                                 <label for="materialRegisterFormEmail">Nombre</label>
                             </div>
                         </div>

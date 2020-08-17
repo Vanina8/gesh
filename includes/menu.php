@@ -1,3 +1,5 @@
+
+
 <div class="d-flex toggled" id="wrapper">
 
 <!-- Sidebar -->
@@ -5,13 +7,44 @@
   <div class="sidebar-heading"><strong>Horario de profesores</strong></div>
 
   <div class="list-group list-group-flush ">
+  <li class="nav-item dropdown ">
+        
+       <a href="#" class="list-group-item list-group-item-action color-block-5"  data-toggle="dropdown">Profesores</a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="registro.php" id='pn' >Nuevo</a>
+          <a class="dropdown-item" href="buscar.php">Buscar</a>
+          <a class="dropdown-item" href="profeasigna.php">Asignar</a>
+        </div>
 
-    <a href="#" class="list-group-item list-group-item-action color-block-5">Registro</a>
-    <a href="#" class="list-group-item list-group-item-action color-block-5">Asignación</a>
-    <a href="#" class="list-group-item list-group-item-action color-block-5">Reportes</a>
-    <a href="#" class="list-group-item list-group-item-action color-block-5">Calendario</a>
-    <a href="#" class="list-group-item list-group-item-action color-block-5">Estadisticas</a>
-    <a href="#" class="list-group-item list-group-item-action color-block-5">Mantenimiento</a>
+   </li>
+
+  <li class="nav-item dropdown ">
+        
+    <a href="#" class="list-group-item list-group-item-action color-block-5"  data-toggle="dropdown">Asignaturas</a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="asignatura.php">Nuevo</a>
+        <a class="dropdown-item" href="buscarAsig.php">Buscar</a>
+      </div>
+  </li>
+  <li class="nav-item dropdown ">
+    <a href="#" class="list-group-item list-group-item-action color-block-5"  data-toggle="dropdown">Grupos</a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item"  href="grupos.php">Nuevo/Listar</a>
+        <a class="dropdown-item" href="gruposasigna.php">Asignar</a>
+      </div>
+  </li>
+  
+    <a href="aulas.php" class="list-group-item list-group-item-action color-block-5">Aulas</a>
+  <li class="nav-item dropdown ">
+    <a href="#" class="list-group-item list-group-item-action color-block-5"  data-toggle="dropdown">Horario</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="tramos.php">Tramos</a>
+        <a class="dropdown-item" href="nuevaSesion.php">Nuevo</a>
+        <a class="dropdown-item" href="#">Consultas</a>
+      </div>
+   </li>
+
+    <a href="../login/salir.php" class="list-group-item list-group-item-action color-block-5">Salir</a>
   </div>
 </div>
 <!-- /#sidebar-wrapper -->
@@ -104,4 +137,5 @@
       </ul>
     </div>
   </nav>
+
 

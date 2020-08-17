@@ -14,8 +14,8 @@
 
 <div class="container" >
     <div class="row">
-        <div class="col-6">
-            <div class="row"  v-for="item in datosFiltrados">
+        <div class="col-12">
+            <div class="row"  v-for="item in datosFiltradosUsu">
                 <div class="col-12 pt-5">
                     <!-- Card Wider -->
                     <div class="card card-cascade wider row"  >
@@ -24,20 +24,22 @@
                         <div class="card-body card-body-cascade text-center pb-0"  >
 
                             <!-- Title -->
-                            <h4 class="card-title"><strong>{{item.nombres}} {{item.apellidos}}</strong></h4>
+                            <h4 class="card-title"><strong>{{item.p_nombre}} {{item.p_apellido}}</strong></h4>
 
                         </div>
 
                             <!-- Subtitle -->
-                            <h5 class="blue-text pb-2 text-center"><strong>{{item.dni}} - {{item.estado}}</strong></h5>
-                            <!-- Text -->
-                            <p class="card-text text-center">{{item.rol}}</p>
+                            <h5 class="blue-text pb-2 text-center"><strong>{{item.p_dni}} - {{item.p_estado}}</strong></h5>
 
-                    
+                            <!-- Text -->
+                            <p class="card-text text-center">{{item.r_nombre}}</p>
+
                             <!-- Card footer -->
-                            <div class="card-footer text-muted text-center mt-4">
-                                <div> <i class="far fa-envelope"></i>{{item.email}} </div>
-                                <div><i class="fas fa-mobile-alt"></i>{{item.telefono}}</div>                            
+                            <div class="card-footer text-muted text-center mt-0">
+                                <div> <i class="far fa-envelope"></i>{{item.p_email}} </div>
+                                <div><i class="fas fa-mobile-alt"></i>{{item.p_telefono}}</div>    
+                                <a class='btn btn-danger btn-sm' href="#" @click="eliminarProfe(item.p_id)"><i class="fas fa-trash"></i></a>
+                        
                             </div>
                     </div>
                     <div  id="contenido">

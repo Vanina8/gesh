@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta  http-equiv="Content-type" content="text/html" charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Material Design for Bootstrap</title>
@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="../css/micss.css">
   <!-- cdn de vue -->  
   <script src='../api/viu/vue.min.js'></script>
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
 
   

@@ -12,14 +12,22 @@ const app = new Vue({
     inicio: false,
     correo:'',
     roles:[],
-    selectedRol:''
+    selectedRol:'',
+    listarUsu:[],
+    dni:''
   },
   created(){
     this.getRoles()
+    this.getUsuarios()
   },
   
   methods:{
-
+    getUsuarios(){
+      axios.get('http://localhost/ghpV01/api/crud/getUsuarios.php')
+      .then(res =>{                    
+          this.listarUsu = res.data
+      })
+    },
     getRoles(){
       axios.get('http://localhost/ghpV01/api/crud/getRoles.php')
       .then(res =>{                    
@@ -27,17 +35,40 @@ const app = new Vue({
           // swal.fire('listado ok', '', 'success')
       })
     },
+    dniProfeFiltrado(){
+      return this.listarUsu.filter((filtro)=>{
+        return filtro.p_dni.match(this.dni) 
+      })
+    },
+    correoProfeFiltrado(){
+      return this.listarUsu.filter((filtro)=>{
+        return filtro.p_email.match(this.correo) 
+      })
+    },
 
     registro() {
-      if (this.pass == this.passC) {
-        const form = document.getElementById("formRegistro")
-        axios
-          .post("../api/Registro/registro.php", new FormData(form))
-          .then((res) => {
-            this.respuesta = res.data
 
-            this.direccionamiento()
-          })
+      if (this.pass == this.passC ) {
+      
+        if(!(this.dniProfeFiltrado().length>0)){
+
+          if(!(this.correoProfeFiltrado().length>0)){
+
+            const form = document.getElementById("formRegistro")
+            axios
+              .post("../api/Registro/registro.php", new FormData(form))
+              .then((res) => {
+                this.respuesta = res.data
+                this.direccionamiento()
+              })
+            }else{
+              swal.fire("E-mail "+this.correo+" ya existe", " Debe ser dato único", "fail");
+
+            }
+          
+        }else{
+          swal.fire("DNI "+this.dni+" ya existe", " Debe ser dato único", "fail");
+        }
       } else {
         swal.fire("los passwords no son iguales", "", "fail");
       }
@@ -87,3 +118,7 @@ const app = new Vue({
 
     }
 })
+$("#menu-toggle").click(function(e) {
+  e.preventDefault();
+  $("#wrapper").toggleClass("toggled");
+});

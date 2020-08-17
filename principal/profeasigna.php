@@ -1,12 +1,12 @@
 <?php   include '../includes/header.php';
         include "../includes/menu.php";
 ?>
-  
+ 
   <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formProfeAsigna" autocomplete="off" @submit.prevent="RegistroProfeAsignaAsi">                              
 
    <div class=" row container-fluid col-12 pt-3 justify-content-center">
 
-      <div class="col-2 m-1 border shadow rounded">
+      <div class="col-4 m-1 border shadow rounded">
 
           <label class='pt-2'> <strong> Profesores</strong></label>      
 
@@ -17,11 +17,11 @@
 
           <div class=' pt-2  text-center '>
                   
-                     <select v-model="selectedProfe" name="cod_profe" id='cod_profe' size= '5' class='shadow border'>
-                                        <option v-for="option in datosFiltrados" v-bind:value="option.id">
+                <select v-model="selectedProfe" name="cod_profe" id='cod_profe' size= '5' class='shadow border'>
+                         <option v-for="option in datosFiltradosPro" v-bind:value="option.id" class='optionAsignarPro'>
                                             {{ option.nombres }} {{option.apellidos}}
-                                        </option>
-                     </select>
+                         </option>
+                </select>
           </div>
       </div>
       <div class="col-1 m-1 border d-flex align-items-center justify-content-center shadow rounded">
@@ -43,7 +43,7 @@
           <div class='  pt-2 text-center'>
 
                     <select v-model="selectedAsig" name="cod_asig[]" size = '10' id='cod_asig' multiple class="shadow border mb-3">
-                                        <option v-for="option in datosFiltradosAsigG" v-bind:value="option.id">
+                                        <option v-for="option in datosFiltradosAsigG" v-bind:value="option.id" class='optionAsignarPro'>
                                             {{ option.nombre }}
                                         </option>
                     </select>
@@ -63,15 +63,12 @@
                      
                      <!--Navbar-->
        
-                    <nav class="navbar navbar-light py-4 ">                            
-                        <!-- <form class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4" @submit.prevent="getProfeAsig()">          -->
-
+                    <nav class="navbar navbar-light form-inline py-4 ">                            
                             <label for="" class="pr-2 pl-5"> Profesor</label>
                             <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="buscarProfe">
                             <h5 class="black-text text-center px-5">
                                 <strong>Desasignar asignaturas a Profesor</strong>
                             </h5>             
-                        <!-- </form> -->
                     </nav> 
                     <!--/.Navbar-->
      

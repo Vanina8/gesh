@@ -62,7 +62,7 @@
             
                         <div class="form-row">                
                             <div class="md-form col-8 container-fluid">
-                                <input type="text" id="materialRegisterFormEmail" required class="form-control" name="nombre" value="">
+                                <input type="text" id="materialRegisterFormEmail" required class="form-control" name="nombre" value="" autofocus>
                                 <label for="materialRegisterFormEmail">Nombre</label>
                             </div>
                         </div>

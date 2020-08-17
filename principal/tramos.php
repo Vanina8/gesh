@@ -61,12 +61,12 @@
                         <div class="form-row justify-content-center"  >                
                            
                             <div class="md-form md-outline input-with-post-icon timepicker" darktheme="true">
-                                <input type="time" id="set-dark-theme" class="form-control" placeholder="Select time" name="inicio">
+                                <input type="time" id="set-dark-theme" class="form-control" placeholder="Select time" name="inicio" v-model='inicio'>
                                 <label for="set-dark-theme">Inicio</label>
                                 <!-- <i class="fas fa-envelope  input-prefix"></i> -->
                             </div>
                             <div class="md-form md-outline input-with-post-icon timepicker" darktheme="true">
-                                <input type="time" id="set-dark-theme" class="form-control" placeholder="Select time" name="fin">
+                                <input type="time" id="set-dark-theme" class="form-control" placeholder="Select time" name="fin" v-model='fin'>
                                 <label for="set-dark-theme">Fin</label>
                                 <!-- <i class="fas fa-envelope  input-prefix"></i> -->
                             </div>

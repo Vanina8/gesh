@@ -28,6 +28,7 @@ const app = new Vue({
         titulosYear:[],
         selectedYear:'',       // Año del horario a registrar
         sesionesCG:[],
+        dataSesion:[],  
         idHorario: -1,
     },
     created(){
@@ -40,14 +41,13 @@ const app = new Vue({
     },
     watch:{
       selectedIdGrupo(newVal, oldVal){
-        if(this.selectedYear!='' && this.selectedSem!=''){
-          Swal.fire(
-            'Reiniciará el panel',
-            '',
-            'warning'
-          )
-          this.buscaNuevo();
-        }
+        this.infoInicio();
+      },
+      selectedYear(newVal, oldVal){
+        this.infoInicio();
+      },
+      selectedSem(newVal, oldVal){
+        this.infoInicio();
       }
     },
     computed:{
@@ -65,6 +65,16 @@ const app = new Vue({
     },
 
     methods: {
+      infoInicio(){
+        if(this.selectedYear!='' && this.selectedSem!=''){
+          Swal.fire(
+            'Nuevo panel',
+            '',
+            'info'
+          )
+          this.buscaNuevo();
+        }
+      },
        getTitulosYear(){            
           axios
             .get('http://localhost/ghpV01/api/crud/getTitulosYear.php')
@@ -223,6 +233,7 @@ const app = new Vue({
                 this.numeroDia.push($dia);
                 this.idTramo.push($tramo);
           },
+
           selectAula($idaula, $index){
 
             if(!this.aulaEncendida){   // si no hay ningun boton de aula encendido
@@ -294,6 +305,7 @@ const app = new Vue({
                     for(i = 0; i < this.aulas.length; i++){
                        
                         var x = document.getElementById(i);
+                        console.log('numero dia y tramo son:'+this.numeroDia[j]+"  "+this.idTramo[j] )
                         if(this.estadoAulas(this.aulas[i].id, this.numeroDia[j],this.idTramo[j])){
                             x.setAttribute('disabled', '');  
                         }
@@ -375,9 +387,7 @@ const app = new Vue({
                    swal.fire('Falta un dato por lo menos', 'Elija una aula válida', 'fail');
                    return;
              }
-
               const form = document.getElementById("formNuevaSesion");    
-
               axios.post('../api/Registro/sesion.php', new FormData(form)) 
               .then( res =>{
                   this.respuesta = res.data
@@ -411,7 +421,7 @@ const app = new Vue({
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Si, bórralo!'
               }).then((result) => {
                 if (result.value) {
                     axios
@@ -419,14 +429,9 @@ const app = new Vue({
                       .then((res) => {
                         this.getSesiones(this.selectedYear, this.selectedSem, this.idHorario);  
                         Swal.fire(
-                          'Borrado!',
-                          'La sesión ha sido eliminada.',
-                          'success'
-                        )      
-                        // this.iniciaTablaDias();
-
+                          'Borrado!', 'La sesión ha sido eliminada.',  'success'
+                        )                            
                         return true;                          
-
                       }); 
                 }else{
                   return false;
@@ -536,10 +541,10 @@ const app = new Vue({
           },
 
           iniciaTablaDias(){
-            
+
             for (indice in this.tramoshorario){
                 if(this.encontrado(1, this.tramoshorario[indice].id)>0){
-                    this.ocupadoBoton('cambioColor1', indice);
+                  this.ocupadoBoton('cambioColor1', indice);
                 }else{
                   this.apagarBoton('cambioColor1', indice);
                 }
@@ -563,8 +568,14 @@ const app = new Vue({
                 }else{
                   this.apagarBoton('cambioColor5', indice);
                 }
-            }
+            }  
           },
+          dameSesion($idSesion){
+            return this.sesionesCG.filter((filtro)=>{
+                return filtro.id.match($idSesion)  
+            });
+          },
+      
           reiniciaPanel(){
             this.eliminaDiaTramoEncendido();
             this.iniciaTablaDias();
@@ -572,7 +583,6 @@ const app = new Vue({
             this.revisaEstadoProfe();
           },
           ocupadoBoton($clases, $index){ // boton ocupado
-            console.log('Viene a ocupadoBoton con los parametros:'+$clases,+' '+$index);
             var x = document.getElementsByClassName($clases);
             x[$index].classList.add('btn-secondary');
             x[$index].classList.remove('btn-info');
@@ -580,8 +590,100 @@ const app = new Vue({
           },
 
           verHorario(){
-            console.log('ver horario');
+            for (indice in this.tramoshorario){
+              var idSesionLunes,idSesionMartes, idSesionMiercoles, idSesionJueves, idSesionViernes;
+              var sesionLunes, sesionMartes, sesionMiercoles, sesionJueves, sesionViernes;
+
+              idSesionLunes=this.encontrado(1, this.tramoshorario[indice].id);
+              if(idSesionLunes>0){
+                  sesionLunes= this.dameSesion(idSesionLunes);
+                  this.ocupadoBotonSesi('cambioColor11', indice, sesionLunes[0],1);
+                }else{
+                  this.desocupaBotonSesi('cambioColor11', indice, 1);                  
+              }
+              idSesionMartes=this.encontrado(2, this.tramoshorario[indice].id);
+              if(idSesionMartes>0){
+                sesionMartes= this.dameSesion(idSesionMartes);
+                this.ocupadoBotonSesi('cambioColor22', indice, sesionMartes[0],2);
+              }else{
+                this.desocupaBotonSesi('cambioColor22', indice, 2);
+              }
+              idSesionMiercoles=this.encontrado(3, this.tramoshorario[indice].id);
+              if(idSesionMiercoles>0){
+                sesionMiercoles= this.dameSesion(idSesionMiercoles);
+                  this.ocupadoBotonSesi('cambioColor33', indice, sesionMiercoles[0],3);
+              }else{
+                this.desocupaBotonSesi('cambioColor33', indice, 3);
+              }
+              idSesionJueves=this.encontrado(4, this.tramoshorario[indice].id);
+              if(idSesionJueves>0){
+                  sesionJueves= this.dameSesion(idSesionJueves);
+                  this.ocupadoBotonSesi('cambioColor44', indice, sesionJueves[0],4);
+              }else{
+                this.desocupaBotonSesi('cambioColor44', indice, 4);
+              }
+              idSesionViernes=this.encontrado(5, this.tramoshorario[indice].id);
+              if(idSesionViernes>0){
+                sesionViernes= this.dameSesion(idSesionViernes);
+                this.ocupadoBotonSesi('cambioColor55', indice, sesionViernes[0],5);
+              }else{
+                this.desocupaBotonSesi('cambioColor55', indice, 5);
+              }            
+            }
           }, 
+          desocupaBotonSesi($clase, $index, $dia){
+            this.apagarBoton($clase, $index);
+
+            if($dia==1){
+              var elemento = document.getElementById('L'+$index);
+                elemento.innerHTML=' ';
+            }
+            if($dia==2){
+              var elemento = document.getElementById('M'+$index);
+                elemento.innerHTML=' ';
+            }
+            if($dia==3){
+              var elemento = document.getElementById('Mi'+$index);
+                elemento.innerHTML=' ';
+            }
+            if($dia==4){
+              var elemento = document.getElementById('J'+$index);
+              elemento.innerHTML=' ';
+            }
+            if($dia==5){
+              var elemento = document.getElementById('V'+$index);
+              elemento.innerHTML=' ';
+            }           
+          },
+          ocupadoBotonSesi($clase, $index, $sesion, $dia){
+
+            this.ocupadoBoton($clase, $index);
+
+            if($dia==1){
+              var elemento = document.getElementById('L'+$index);
+                elemento.innerHTML='<p>'+$sesion.s_nombre+'</p><p>'+$sesion.a_nombre+'</p><p>'+$sesion.p_nombre+' '+$sesion.p_apellido ;
+            }
+            if($dia==2){
+              var elemento = document.getElementById('M'+$index);
+              elemento.innerHTML='<p>'+$sesion.s_nombre+'</p><p>'+$sesion.a_nombre+'</p><p>'+$sesion.p_nombre+' '+$sesion.p_apellido ;
+            }
+            if($dia==3){
+              var elemento = document.getElementById('Mi'+$index);
+              elemento.innerHTML='<p>'+$sesion.s_nombre+'</p><p>'+$sesion.a_nombre+'</p><p>'+$sesion.p_nombre+' '+$sesion.p_apellido ;
+            }
+            if($dia==4){
+              var elemento = document.getElementById('J'+$index);
+              elemento.innerHTML='<p>'+$sesion.s_nombre+'</p><p>'+$sesion.a_nombre+'</p><p>'+$sesion.p_nombre+' '+$sesion.p_apellido ;
+            }
+            if($dia==5){
+              var elemento = document.getElementById('V'+$index);
+              elemento.innerHTML='<p>'+$sesion.s_nombre+'</p><p>'+$sesion.a_nombre+'</p><p>'+$sesion.p_nombre+' '+$sesion.p_apellido ;
+            }           
+          },
     }
 })
 
+$("#menu-toggle").click(function(e) {
+  e.preventDefault();
+  $("#wrapper").toggleClass("toggled");
+});

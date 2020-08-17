@@ -13,9 +13,7 @@ $semestre = htmlentities($_GET['semestre']);
 
 
 
-if($idhorario==-1){
-    $idhorario = traeIdHorario($curso, $semestre, $con);
-}
+$idhorario = traeIdHorario($curso, $semestre, $con);
 
 if($idhorario==''){
     echo 'fail';

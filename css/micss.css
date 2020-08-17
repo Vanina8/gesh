@@ -45,6 +45,9 @@
 .btn-opcion2-inicio a{
   color: #dd6f00   
 }
+#formRegistro select{
+  padding-top: 20px;
+}
 
 #formAsignatura select{
   padding-top: 15px;
@@ -71,25 +74,33 @@
 #formTitulo select{
       padding-top: 20px;
 }
-  
-#formGrupoAsigna  option{
-    padding-top: 25px;
-    font-size: 25px;
+/* Asignar asignaturas a grupos*/  
+.optionAsignarGru{
+    padding-top: 15px;
+    font-size: 18px;
+}
+#formGrupoAsigna #cod_grupo option {
+  padding-right: 50px;
 }
 
-#formGrupoAsigna #cod_grupo option{
-    padding-right: 50px;
+/*  Asignar asignaturas a profes*/
+.optionAsignarPro{
+  padding-top: 10px;
+  font-size: 18px;
 }
 
-#ocupado{
-  background-color: violet;
-}
-#desocupado{
-background-color: cornflowerblue ;
-}
-#elegido{
-  background-color: crimson;
 
+/* Visualizar horario*/
+.espacio {
+  line-height: 2.5 !important;
+}
+.espacio p{
+    margin-bottom: 0px;
+}
+/********************/
+#wrapper li{
+  list-style:  none;
+  background: transparent;
 }
   @media (min-width: 768px) {
     #sidebar-wrapper {

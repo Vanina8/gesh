@@ -32,7 +32,6 @@
                                     <h5 class="blue-text pb-2 text-center" v-if="item.estado==1"><strong>{{etiquetaEstadoB}}</strong></h5>
                                 </td>
                                 <td>						
-                                    <!-- <a href='' class='btn btn-warning btn-sm'><i class="fas fa-pen"></i></a>  -->
                                     <a class='btn btn-danger btn-sm' href="#" @click="eliminarAsignatura(item.id)"><i class="fas fa-trash"></i></a>
                                 </td>
                             </div>

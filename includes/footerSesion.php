@@ -19,12 +19,12 @@
   <script src="../js/appSesion.js"></script>
 
   <!-- Menu Toggle Script -->
-  <script>
+  <!-- <script>
     $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
     });
-  </script>
+  </script> -->
 </body>
 </html>
 

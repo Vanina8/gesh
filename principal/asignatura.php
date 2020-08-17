@@ -23,7 +23,7 @@
                         <div class="form-row">
                                 <!-- Nombre -->
                                 <div class="md-form text-center container-fluid col-5">
-                                    <input type="text" id="materialRegisterFormFirstName" class="form-control" required  name="nombre" value="">
+                                    <input type="text" id="materialRegisterFormFirstName" class="form-control" required  name="nombre" value="" pattern=".{6,}]" autofocus>
                                     <label for="materialRegisterFormFirstName">Nombre</label>
                                 </div>
                         </div>
@@ -38,7 +38,7 @@
                                             {{ option.nombre }}
                                         </option>
                                     </select>
-                                    <span> {{ selected }}</span>
+                                    <!-- <span> {{ selected }}</span> -->
                                 </div>
                         </div>
 
@@ -56,8 +56,6 @@
                                 <div class="md-form  pb-1 mb-0 col-4 justify-content-center col-6">
                                         <label for="defaultInline1" class="pl-2 ml-0 justify-content-center ">Estado</label>  
                                         <input type="checkbox" id="defaultInline1" v-model="estadoEtiAsig" class="form-control pl-1 bg-primary " name='estado' value='{{estadoEtiAsig}' style="margin-left: 50px; width: 50px; height: 30px; background-color: rgba(0,0,255,0.1);" >
-
-                                        <!-- <input type="checkbox" id="defaultInline1" v-model="estadoEti" class="form-control pl-1" name='estado' style="width: 250px; height: 30px; background-color: rgba(0,0,255,0.1);" > -->
 
                                 </div>        
                                 <div class="text-left pt-4 pl-2 ml-0 col-6">

@@ -44,10 +44,10 @@
         <input type="hidden" name="selectedYear" v-model='selectedYear'>
         <input type="hidden" name="idHorario" v-model='idHorario'>
 
-        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='buscaNuevo'>Empezar</button>
+        <!-- <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='buscaNuevo'>Empezar</button> -->
         <!-- Grupo: {{selectedIdGrupo}} Curso: {{selectedYear}} Semestre: {{selectedSem}} -->
 
-        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" data-toggle="modal" data-target="#modalVisualiza" v-on:click='verHorario()'>Visualizar</button>
+        <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-5" type="button" data-toggle="modal" data-target="#modalVisualiza" v-on:click='verHorario()'>Visualizar</button>
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Registrar</button>
 
 
@@ -177,10 +177,10 @@
   aria-hidden="true">
 
   <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class=" modal-dialog  modal-xl modal-dialog-centered col-10" role="document">
     <div class="modal-content">
     <!-- Form -->
-    <form class="text-center" style="color: #757575;"  id="formCatAula" autocomplete="off" @submit.prevent="registroCatAula">                              
+    <form class="text-center" style="color: #757575;"  id="formCatAula" autocomplete="off" >                              
 
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Visualiza horario del grupo</h5>
@@ -193,9 +193,13 @@
             <div class="modal-body">
             
             <div class="col-12 d-block justify-content-center">
-                        
-                        <div class='row col-12 pt-4  justify-content-center' >                                        
-                            <nav class="navbar navbar-light "> 
+                      
+                        <div class='row col-12 pt-4 pr-0 pl-0 ml-0 mr-0 justify-content-center' >                                        
+                            <nav class="navbar navbar-light col-12"> 
+                                <div class='col-2'>
+                                    <label class='text-center'> <strong> Tramos</strong></label>  
+                                </div>
+
                                 <div class='col-2'>
                                     <label class='text-center'> <strong> Lunes</strong></label>  
                                 </div>
@@ -213,36 +217,44 @@
                                 </div>
                             </nav>
                         </div>
+                        <div>    
+                                                      
+                            <div class='row col-12 d-flex justify-content-center m-0 p-0 border' v-for="(item, index) in tramoshorario" id='horarioV' >
 
-                        <div class='row col-12 d-flex justify-content-center' v-for="(item, index) in tramoshorario" id='horario' >
-                                                                                                                  
-                                <div class='col-2 text-center'>
-                                    <button  class="btn p-3 btn-info cambioColor1"  v-on:click="selectTramoDia('lunes', item.id, index)" >                                                    
-                                           {{item.inicio}}
-                                    </button>
-                                </div>
-                                <div class='col-2 text-center'>
-                                    <button  class="btn p-3 btn-info cambioColor2"  v-on:click="selectTramoDia('martes', item.id, index)">                                                    
-                                             {{item.inicio}} 
-                                    </button>
-                                </div>
-                                <div class='col-2 text-center'>
-                                    <button  class="btn p-3 btn-info cambioColor3"  v-on:click="selectTramoDia('miercoles', item.id, index)">                                                    
-                                             {{item.inicio}} 
-                                    </button>
-                                </div>
-                                <div class='col-2 text-center'>
-                                    <button  class="btn p-3 btn-info cambioColor4" v-on:click="selectTramoDia('jueves', item.id, index)">                                                    
-                                               {{item.inicio}} 
-                                    </button>
-                                </div>
-                                <div class='col-2 text-center'>
-                                    <button  class="btn p-3 btn-info cambioColor5" v-on:click="selectTramoDia('viernes', item.id, index)">                                                    
-                                                {{item.inicio}} 
-                                    </button>
-                                </div>
-                        </div>
-        </div>
+                                    <div class='col-2 text-center p-0 m-0'>
+                                        <div  class="p-3 "  >                                                    
+                                           <h6> {{item.inicio}} - {{item.fin}}</h6>
+                                        </div>
+                                    </div>
+                                    
+                                                                                                                    
+                                    <div class='col-2 text-center p-0 m-0'>
+                                        <div class='cambioColor11 espacio rounded-lg' :id="'L'+index">
+                                        </div>
+                                    </div>
+                                    <div class='col-2 text-center p-0 m-0'>
+                                        <div class='cambioColor22 espacio rounded-lg' :id="'M'+index">
+                                        </div>
+                                    </div>
+                                    <div class='col-2 text-center p-0 m-0'>
+                                        <div class='cambioColor33 espacio rounded-lg' :id="'Mi'+index">
+                                        </div>
+                                    </div>
+                                    <div class='col-2 text-center p-0 m-0'>
+                                        <div class='cambioColor44 espacio rounded-lg' :id="'J'+index">
+                                        </div>
+                                    </div>
+                                    <div class='col-2 text-center p-0 m-0'>
+                                        <div class='cambioColor55 espacio rounded-lg' :id="'V'+index">
+                                        </div>
+
+                                    </div>
+
+                                    
+                            </div>
+
+                       </div>
+            </div>
 
             </div>
 
@@ -256,17 +268,6 @@
   </div>
 </div>
 
-
-
-  <!-- <div class="row modal-body col-12">
-                  <div class='col-5'>
-                  </div>
-                  <div class='col-5'> 
-                     <option v-for="option in datosFiltradosSesPro" v-bind:value="option.p_id">
-                               {{ option.p_apellido }}
-                     </option> 
-                   </div>
-  </div> -->
 
 <?php
         include "../includes/footerSesion.php";

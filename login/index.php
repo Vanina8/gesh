@@ -7,7 +7,7 @@
 ?> 
 
 
-<div class="container-fluid col-6 pt-5 mt-5">
+<div class="container-fluid col-3 pt-5 mt-5">
 
 <!-- Material form register -->
 
@@ -21,7 +21,7 @@
 <div class="card-body px-lg-5 pt-0">
 
    <!-- Form -->
-   <form class="text-center" style="color: #757575;" id="inicioSesion" autocomplete="off" @submit.prevent="login">
+   <form class="text-center" style="color: #757575;" id="inicioSesion"  @submit.prevent="login">
         <div class="form-row">
         <div class="col pt-4">
             <!-- E-mail -->

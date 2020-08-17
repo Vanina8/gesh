@@ -5,6 +5,7 @@ const app = new Vue({
         respuesta:'',
         listarAsig:[],
         listarPro:[],
+        listarUsu:[],
         listar:[],
         titulos:[],
        
@@ -45,8 +46,6 @@ const app = new Vue({
         curso:'',
         semestre:'',
         tabla:[],
-
-        // diasSemana:[[ 1, 'lunes'], [2,'martes'], [3,'miercoles'], [4,'jueves'],[ 5,'viernes']],
       
         selectedTramo:'',
         selectedDias:'',
@@ -59,16 +58,9 @@ const app = new Vue({
         estado:true,
       
         lenghtAsig:'',
+        fin:'',
+        inicio:''
         
-
-
-
-        
-        // f:'',
-        // estadoL: true
-      // listado de consulta 2 esta en array: gruposAsig  el filtro tambien esta se llama: datosFiltradosDesA
-      //
-
     },
     created(){
         this.getTitulos()
@@ -78,18 +70,24 @@ const app = new Vue({
         this.getAulas()
         this.getAsignaturas()
         this.getProfesores()
+        this.getUsuarios()
         this.getTramos()
-        // this.getSesiones()
         this.getGruposAsig()
         this.getProfesAsig()
       
     },
     computed:{
-         datosFiltrados(){
-            return this.listarPro.filter((filtro)=>{
-                    return filtro.nombres.toUpperCase().match(this.buscar.toUpperCase()) || filtro.apellidos.toUpperCase().match(this.buscar.toUpperCase()) || filtro.dni.toUpperCase().match(this.buscar.toUpperCase())
+         datosFiltradosUsu(){
+            return this.listarUsu.filter((filtro)=>{
+                    return filtro.p_nombre.toUpperCase().match(this.buscar.toUpperCase()) || filtro.p_apellido.toUpperCase().match(this.buscar.toUpperCase()) || filtro.p_dni.toUpperCase().match(this.buscar.toUpperCase())
             });
         }, 
+        datosFiltradosPro(){
+          return this.listarPro.filter((filtro)=>{
+                  return filtro.nombres.toUpperCase().match(this.buscar.toUpperCase()) || filtro.apellidos.toUpperCase().match(this.buscar.toUpperCase()) || filtro.dni.toUpperCase().match(this.buscar.toUpperCase())
+          });
+      }, 
+
         datosFiltradosAsig(){
           console.log()
             return this.listarAsig.filter((filtro)=>{
@@ -117,28 +115,22 @@ const app = new Vue({
             return filtro.nombre_profe.toUpperCase().match(this.buscarProfe.toUpperCase()) || filtro.apellido_profe.toUpperCase().match(this.buscarProfe.toUpperCase())  
           });
         },
-
-        // // Filtros para funcionalidad Nueva sesión
-        // datosFiltradosGA(){   // muestra solo asignaturas del grupo elegido en registrar nueva sesión
-        //   return this.gruposAsig.filter((filtro)=>{
-        //     return filtro.id_grupo.match(this.selected) 
-        //   });
-        // },
-        // datosFiltradosProfeAsig(){
-        //   return this.profeAsig.filter((filtro)=>{
-        //     return filtro.id_asig.match(this.selectedAsig)  
-        //   });
-        // },
-      
     },
     methods:{
 
-        getProfesores(){         
-                axios.get('http://localhost/ghpV01/api/crud/getProfes.php')
+        getUsuarios(){         
+                axios.get('http://localhost/ghpV01/api/crud/getUsuarios.php')
                 .then(res =>{                    
-                    this.listarPro = res.data
+                    this.listarUsu = res.data
                 })
         },
+        getProfesores(){         
+          axios.get('http://localhost/ghpV01/api/crud/getProfes.php')
+          .then(res =>{                    
+              this.listarPro = res.data
+          })
+        },
+
         getAsignaturas(){
                 axios.get('http://localhost/ghpV01/api/crud/getAsignaturas.php')
                 .then(res =>{                    
@@ -278,22 +270,24 @@ const app = new Vue({
 
           eliminarCateAula(id){
               swal.fire({
-                  title:'Seguro que deseas eliminar el registro',
+                  title:'Seguro de eliminar?',
                   text:'Al eliminarlo no podras recuperarlo',
                   icon:'warning',
-                  buttons:true,
-                  dangerMode:true,
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si, bórralo!'
               })
               .then((aceptar)=>{
-                  if (aceptar) {
+                  if (aceptar.value) {
                       axios.get('http://localhost/ghpV01/api/crud/eliminarCateAula.php?id=' + id )
-                      .then(res =>{
-                      if (res.data.trim() == 'success') {
-                          swal.fire('Categoria eliminada')
-                          location.href = '../principal/aulas.php'
-                      }else{
-                          swal.fire('Categoria no eliminada')
-                      }
+                      .then((res) =>{
+                          if (res.data.trim() == 'success') {
+                              swal.fire('Categoria eliminada', '', 'success')
+                              location.href = '../principal/aulas.php'
+                          }else{
+                              swal.fire('Categoria no eliminada', '', 'fail')
+                          }
                       })
                   }else{
                       return false
@@ -302,29 +296,30 @@ const app = new Vue({
           },
         eliminarAula(id){
             swal.fire({
-                title:'Seguro que deseas eliminar el registro',
+                title:'Seguro de eliminar?',
                 text:'Al eliminarlo no podras recuperarlo',
                 icon:'warning',
-                buttons:true,
-                dangerMode:true,
-            })
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, bórralo!'
+              })
             .then((aceptar)=>{
-                if (aceptar) {
+                if (aceptar.value) {
                     axios.get('http://localhost/ghpV01/api/crud/eliminarAula.php?id=' + id )
-                    .then(res =>{
-                    if (res.data.trim() == 'success') {
-                        swal.fire('Categoria eliminada')
-                        location.href = '../principal/aulas.php'
-                    }else{
-                        swal.fire('Categoria no eliminada')
-                    }
+                    .then((res) =>{
+                        if (res.data.trim() == 'success') {
+                            swal.fire('Categoria eliminada', '', 'success')
+                            location.href = '../principal/aulas.php'
+                        }else{
+                            swal.fire('Categoria no eliminada', '', 'fail')
+                        }
                     })
                 }else{
                     return false
                 }
             })        
         },
-
         registroAula() {
 
           const form = document.getElementById("formAula");
@@ -375,19 +370,21 @@ const app = new Vue({
                 title:'Seguro que deseas eliminar el registro',
                 text:'Al eliminarlo no podras recuperarlo',
                 icon:'warning',
-                buttons:true,
-                dangerMode:true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, bórralo!'
             })
             .then((aceptar)=>{
-                if (aceptar) {
+                if (aceptar.value) {
                     axios.get('http://localhost/ghpV01/api/crud/eliminarAsignatura.php?id=' + id )
-                    .then(res =>{
-                     if (res.data.trim() == 'success') {
-                         swal.fire('Asignatura eliminado')
-                         location.href = '../principal/buscarAsig.php'
-                     }else{
-                        swal.fire('Asignatura no eliminado')
-                     }
+                    .then((res) =>{
+                        if (res.data.trim() == 'success') {
+                            swal.fire('Asignatura eliminado')
+                            location.href = '../principal/buscarAsig.php'
+                        }else{
+                            swal.fire('Falló', 'Asignatura no eliminado', 'fail')
+                        }
                     })
                 }else{
                     return false
@@ -399,17 +396,19 @@ const app = new Vue({
                 title:'Seguro que deseas eliminar el registro',
                 text:'Al eliminarlo no podras recuperarlo',
                 icon:'warning',
-                buttons:true,
-                dangerMode:true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, bórralo!'
             })
             .then((aceptar)=>{
-                if (aceptar) {
+                if (aceptar.value) {
                     axios.get('http://localhost/ghpV01/api/crud/eliminarTramo.php?id=' + id )
-                    .then(res =>{
+                    .then((res) =>{
                      if (res.data.trim() == 'success') {
-                         location.href = '../principal/horario.php'
+                         location.href = '../principal/tramos.php'
                      }else{
-                        swal.fire('Tramo no eliminado')
+                        swal.fire('Falló','Tramo no eliminado', 'fail')
                      }
                     })
                 }else{
@@ -439,23 +438,24 @@ const app = new Vue({
           },
           registroTramo() {
 
-            const form = document.getElementById("formTramo");
-           
-            axios
-              .post("../api/Registro/tramo.php", new FormData(form))
-              .then((res) => {
-                this.respuesta = res.data
-  
-                  if (this.respuesta.trim() == "success") {
-  
-                      swal.fire('Tramo registrado', '', 'success')
-                      location.href = '../principal/horario.php'
-  
-                  } else {
-  
-                      swal.fire('Error al registrar tramo', ''+this.respuesta, 'fail')    
-                  }
-              })                  
+            if(this.validaTramos()){
+                const form = document.getElementById("formTramo");           
+                axios
+                  .post("../api/Registro/tramo.php", new FormData(form))
+                  .then((res) => {
+                    this.respuesta = res.data
+      
+                      if (this.respuesta.trim() == "success") {
+      
+                          swal.fire('Tramo registrado', '', 'success')
+                          location.href = '../principal/tramos.php'
+      
+                      } else {
+      
+                          swal.fire('Error al registrar tramo', 'Revicelo e intente nuevamente', 'fail')    
+                      }
+                  })               
+            }  
           },
           getSesiones(){
             axios
@@ -465,158 +465,7 @@ const app = new Vue({
                 console.log('esto trae:'+this.sequeda)
             });             
            },
-           buscaNuevo(){
-                this.lenghtAsig= this.gruposAsig.length;
-                  console.log('tamaño de array es:'+this.lenghtAsig);
-
-                this.mostrarOpciones= true;
-                this.construyeTabla();
-                this.getSesionesCursoGrupo(this.selected, this.curso, this.semestre);
-
-                console.log("estos son los valores de sesiones"+this.sesionesCG);
-
-                // console.log('Estoy dentro de buscaNuevo');
-                // console.log('lunes'+this.tabla['lunes'][0].inicio)
-                // console.log('lunes'+this.tabla['lunes'][1].inicio)
-                // console.log('lunes'+this.tabla['lunes'][2].inicio)
-                // console.log('lunes'+this.tabla['lunes'][3].inicio)
-                // console.log('martes'+this.tabla['martes'])
-                // console.log('miercoles'+this.tabla['miercoles'])
-                // console.log('jueves'+this.tabla['jueves'])
-           },
-           selectTramoDia($dia, $tramo, $index){
-            console.log("lo que trae al metodo selectTramoDia es: "+$dia+" "+$tramo+" "+$index );
-                        
-            if($dia=='lunes'){
-                
-                  this.estadoLunes[$index] = !this.estadoLunes[$index];
-  
-                  if(this.estadoLunes[$index]){
- 
-                    var x = document.getElementsByClassName("cambioColor1");
-                      x[$index].classList.add('btn-info');
-                      x[$index].classList.remove('btn-danger');
-
-                      var pos_dia =this.numeroDia.indexOf($dia)
-                      var pos_idtra =this.idTramo.indexOf($tramo)
-                      this.numeroDia.splice(pos_dia, 1);
-                      this.idTramo.splice(pos_idtra, 1);
-
-                  }else{
-                      var x =document.getElementsByClassName("cambioColor1");
-                      x[$index].classList.add('btn-danger');
-                      x[$index].classList.remove('btn-info');
-
-                      this.numeroDia=+1;
-                      this.idTramo=+$tramo;
-
-                  }               
-                  // if(this.estadoLunes[$index]){
-                  //   this.fondoLunes[$index]='btn-info';
-                  // }else{
-                  //   this.fondoLunes[$index]='btn-danger';
-                  // }
-                  console.log('el valor asignado para clase cambioColor:'+ document.getElementsByClassName("cambioColor").toString);
-            }
-            if($dia=='martes'){
-            
-
-                  this.estadoMartes[$index] = !this.estadoMartes[$index];
-
-                  if(this.estadoMartes[$index]){
-                    var x = document.getElementsByClassName("cambioColor2");
-                    x[$index].classList.add('btn-info');
-                    x[$index].classList.remove('btn-danger');
-
-                    var pos_dia =this.numeroDia.indexOf($dia)
-                    var pos_idtra =this.idTramo.indexOf($tramo)
-                    this.numeroDia.splice(pos_dia, 1);
-                    this.idTramo.splice(pos_idtra, 1);
-              }else{
-                    var x =document.getElementsByClassName("cambioColor2");
-                    x[$index].classList.add('btn-danger');
-                    x[$index].classList.remove('btn-info');
-
-                    this.numeroDia.push(2);
-                    this.idTramo.push($tramo);
-                }               
-            }
-            if($dia=='miercoles'){
-            
-
-                this.estadoMiercoles[$index] = !this.estadoMiercoles[$index];
-
-                if(this.estadoMiercoles[$index]){
-                  var x = document.getElementsByClassName("cambioColor3");
-                  x[$index].classList.add('btn-info');
-                  x[$index].classList.remove('btn-danger');
-
-                  var pos_dia =this.numeroDia.indexOf($dia)
-                  var pos_idtra =this.idTramo.indexOf($tramo)
-                  this.numeroDia.splice(pos_dia, 1);
-                  this.idTramo.splice(pos_idtra, 1);
-            }else{
-                  var x =document.getElementsByClassName("cambioColor3");
-                  x[$index].classList.add('btn-danger');
-                  x[$index].classList.remove('btn-info');
-
-                  this.numeroDia.push(3);
-                  this.idTramo.push($tramo);
-              }               
-            }
-            if($dia=='jueves'){
-             
-
-                this.estadoJueves[$index] = !this.estadoJueves[$index];
-
-                if(this.estadoJueves[$index]){
-                  var x = document.getElementsByClassName("cambioColor4");
-                  x[$index].classList.add('btn-info');
-                  x[$index].classList.remove('btn-danger');
-
-                  var pos_dia =this.numeroDia.indexOf($dia)
-                  var pos_idtra =this.idTramo.indexOf($tramo)
-                  this.numeroDia.splice(pos_dia, 1);
-                  this.idTramo.splice(pos_idtra, 1);
-                }else{
-                  var x =document.getElementsByClassName("cambioColor4");
-                  x[$index].classList.add('btn-danger');
-                  x[$index].classList.remove('btn-info');
-
-                  this.numeroDia.push(4);
-                  this.idTramo.push($tramo);
-                }               
-              }
-              if($dia=='viernes'){
-              
-
-                this.estadoViernes[$index] = !this.estadoViernes[$index];
-
-                if(this.estadoViernes[$index]){
-                  var x = document.getElementsByClassName("cambioColor5");
-                  x[$index].classList.add('btn-info');
-                  x[$index].classList.remove('btn-danger');
-
-                  var pos_dia =this.numeroDia.indexOf($dia)
-                  var pos_idtra =this.idTramo.indexOf($tramo)
-                  this.numeroDia.splice(pos_dia, 1);
-                  this.idTramo.splice(pos_idtra, 1);
-                }else{
-                  var x =document.getElementsByClassName("cambioColor5");
-                  x[$index].classList.add('btn-danger');
-                  x[$index].classList.remove('btn-info');
-
-                  this.numeroDia.push(5);
-                  this.idTramo.push($tramo);
-
-                }               
-           
-              }
-
-console.log('el contenedo de NumeroDia:'+this.numeroDia);
-console.log("el contenido de idTramo es:"+this.idTramo);
-
-           },
+        
            selectAsignatura($itemAsig, $index, $estado){
                
              var x =document.getElementsByClassName("cambioColor6");              
@@ -654,10 +503,7 @@ console.log("el contenido de idTramo es:"+this.idTramo);
               }
           },
 
-           registraSesion(){
-
-           },
-
+        
            RegistroGrupoAsignaAsi(){
 
             const form = document.getElementById("formGrupoAsigna");
@@ -694,7 +540,7 @@ console.log("el contenido de idTramo es:"+this.idTramo);
                           swal.fire('Asignación eliminada')
                           location.href = '../principal/gruposasigna.php'
                       }else{
-                          swal.fire('Asignación no eliminada')
+                          swal.fire('Asignación no eliminada', '', 'fail')
                       }
                       })
                   }else{
@@ -736,44 +582,58 @@ console.log("el contenido de idTramo es:"+this.idTramo);
                 if (aceptar) {
                     axios.get('http://localhost/ghpV01/api/crud/eliminarProfeAsig.php?id=' + id )
                     .then(res =>{
-                    if (res.data.trim() == 'success') {
-                        swal.fire('Asignación eliminada')
-                        location.href = '../principal/profeasigna.php'
-                    }else{
-                        swal.fire('Asignación no eliminada')
-                    }
+                        if (res.data.trim() == 'success') {
+                            swal.fire('Asignación eliminada')
+                            location.href = '../principal/profeasigna.php'
+                        }else{
+                            swal.fire('Asignación no eliminada');
+                        }
                     })
                 }else{
                     return false
                 }
-            })       
-        },
+            })                   
+          },
+          eliminarProfe($idProfe){
 
-          // desasignar: function( event ){
-
-          //   console.log('Hola mundo');
-
-          //   const form = document.getElementById("formGrupoAsigna");
-           
-          //   axios
-          //     .post("../api/crud/eliminargrupoasigna.php", new FormData(form))
-          //     .then((res) => {
-          //       this.respuesta = res.data
-  
-          //         if (this.respuesta.trim() == "success") {
-  
-          //             swal.fire('Asignaturas desasignadas', '', 'success')
-          //             location.href = '../principal/gruposasigna.php'
-  
-          //         } else {
-  
-          //             swal.fire('Error al desasignar', ''+this.respuesta, 'fail')    
-          //         }
-          //     })          
-
-          // }
+            swal.fire({
+              title: 'Esta seguro?',
+              text: "No podras revertir esto!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, bórralo!'
+              }).then((result) => {
+                    if (result.value) {
+                        axios.get('http://localhost/ghpV01/api/crud/eliminarUsuario.php?id=' + $idProfe )
+                        .then((res) => {
+                            if (res.data.trim() == 'success') {
+                              Swal.fire('Borrado!', 'La sesión ha sido eliminada.', 'success')                            
+                              location.href = '../principal/buscar.php'
+                            }else{
+                                Swal.fire('Falló!', 'No se pudo eliminar'+res.data, 'fail')                            
+                            }
+                        }); 
+                    }
+              });
+          },
+          validaTramos(){
+            if(this.inicio<this.fin){
+              return true;
+            }else{
+              swal.fire('Horas no válidas', 'Hora fin debe ser mayor a hora inicio', 'fail')
+            }
+        }
+   
     }
 })
+
+$("#menu-toggle").click(function(e) {
+  e.preventDefault();
+  $("#wrapper").toggleClass("toggled");
+});
+
 
 
 
