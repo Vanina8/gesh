@@ -1,5 +1,18 @@
 <?php   include '../includes/header.php';
-        include "../includes/menu.php";
+      @session_start();
+      if($_SESSION['rol']=='Administrador'){
+      
+              include "../includes/menucompleto.php";
+      
+      }else if($_SESSION['rol']=='Coordinador'){
+      
+              include "../includes/menucoordinadores.php";
+      
+      }else if($_SESSION['rol']=='Profesor'){
+      
+              include "../includes/menuprofesores.php";
+      }
+      
 ?>
   
   <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formGrupoAsigna" autocomplete="off" @submit.prevent="RegistroGrupoAsignaAsi">                              
@@ -42,7 +55,7 @@
             <div class='  pt-2 text-center'>
                     <select v-model="selectedAsig" name="cod_asig[]" size = '10' id='cod_asig' multiple class="shadow border mb-3">
                                 <option v-for="option in datosFiltradosAsigG" v-bind:value="option.id" class='optionAsignarGru'>
-                                        {{ option.nombre }}
+                                       {{option.codigo}} - {{ option.nombre }}
                                 </option>
                     </select>
            </div>
@@ -75,7 +88,7 @@
                             <tr v-for="item in datosFiltradosDesA"> 
                                     <td>{{item.id}}</td>
                                     <td>{{item.nombre_grupo}}</td>
-                                    <td>{{item.nombre_asig}}</td>
+                                    <td>{{item.codigo_asig}} - {{item.nombre_asig}}</td>
                                     <td><a class='btn btn-danger btn-sm' href="#" @click="eliminarAsignaG(item.id)"><i class="fas fa-trash"></i></a></td>
                             </tr>                   
                       </table>

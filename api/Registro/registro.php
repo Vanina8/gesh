@@ -6,8 +6,8 @@ require_once("../conexion.php");
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     
        
-    $nombre= mysqli_real_escape_string($con, htmlentities($_POST['nombre']));
-    $apellido= mysqli_real_escape_string($con, htmlentities($_POST['apellido']));
+    $nombre= mysqli_real_escape_string($con, $_POST['nombre']);
+    $apellido= mysqli_real_escape_string($con, $_POST['apellido']);
     $email= mysqli_real_escape_string($con, htmlentities($_POST['email']));
     $pass= mysqli_real_escape_string($con, htmlentities($_POST['pass']));
     $dni= mysqli_real_escape_string($con, htmlentities($_POST['dni']));

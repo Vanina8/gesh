@@ -1,6 +1,19 @@
 <?php  
     include '../includes/header.php' ;
-    include "../includes/menu.php";
+    @session_start();
+    if($_SESSION['rol']=='Administrador'){
+    
+            include "../includes/menucompleto.php";
+    
+    }else if($_SESSION['rol']=='Coordinador'){
+    
+            include "../includes/menucoordinadores.php";
+    
+    }else if($_SESSION['rol']=='Profesor'){
+    
+            include "../includes/menuprofesores.php";
+    }
+    
 ?>
 <!--Navbar-->
     <nav class="navbar navbar-light">
@@ -15,7 +28,7 @@
 <div class="container" >
     <div class="row justify-content-center">
         <div class="col-11">
-            <!-- <div class="row"  v-for="item in datosFiltradosAsig"> -->
+         
                 <div class="col-12 pt-5">
 
                     <table class='table pt-5 col-12'>
@@ -28,11 +41,11 @@
                                 <td><h5>{{item.codigo}}</h5></td><td><h5>{{item.nombre}}</h5></td><td><h5>{{item.titulo}}</h5></td>
                                 <td>
                                     <!-- Subtitle -->
-                                    <h5 class="blue-text pb-2 text-center" v-if="item.estado==0"><strong>{{etiquetaEstadoA}}</strong></h5>
-                                    <h5 class="blue-text pb-2 text-center" v-if="item.estado==1"><strong>{{etiquetaEstadoB}}</strong></h5>
+                                    <h5 class="blue-text pb-2 text-center" ><strong>{{item.estado}}</strong></h5>
+                                    <!-- <h5 class="blue-text pb-2 text-center" v-if="item.estado==0"><strong>{{etiquetaEstadoB}}</strong></h5> -->
                                 </td>
                                 <td>						
-                                    <a class='btn btn-danger btn-sm' href="#" @click="eliminarAsignatura(item.id)"><i class="fas fa-trash"></i></a>
+                                    <a class='btn btn-danger btn-sm' href="#" @click="eliminarAsignatura(item.id, item.codigo)"><i class="fas fa-trash"></i></a>
                                 </td>
                             </div>
                         </tr>            

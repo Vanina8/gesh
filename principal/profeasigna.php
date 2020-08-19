@@ -19,7 +19,7 @@
                   
                 <select v-model="selectedProfe" name="cod_profe" id='cod_profe' size= '5' class='shadow border'>
                          <option v-for="option in datosFiltradosPro" v-bind:value="option.id" class='optionAsignarPro'>
-                                            {{ option.nombres }} {{option.apellidos}}
+                                  {{ option.nombres }} {{option.apellidos}}
                          </option>
                 </select>
           </div>
@@ -40,12 +40,12 @@
                     <input class="form-control" type="text" placeholder="Search" aria-label="Search" v-model="buscarAsig">               
             </nav>
 
-          <div class='  pt-2 text-center'>
+          <div class='pt-2 text-center'>
 
                     <select v-model="selectedAsig" name="cod_asig[]" size = '10' id='cod_asig' multiple class="shadow border mb-3">
-                                        <option v-for="option in datosFiltradosAsigG" v-bind:value="option.id" class='optionAsignarPro'>
-                                            {{ option.nombre }}
-                                        </option>
+                           <option v-for="option in datosFiltradosAsigG" v-bind:value="option.id" class='optionAsignarPro'>
+                                 {{option.codigo}} - {{ option.nombre }}
+                           </option>
                     </select>
           </div>
       </div>
@@ -84,7 +84,7 @@
                                 <div class="card-body card-body-cascade  pb-0">                  
                                     <td>{{item.id}}</td>
                                     <td>{{item.nombre_profe}} {{item.apellido_profe}}</td>
-                                    <td>{{item.nombre_asig}}</td>
+                                    <td>{{item.codigo_asig}} - {{item.nombre_asig}}</td>
                                     <td>
                                     <a class='btn btn-danger btn-sm' href="#" @click="eliminarAsignaP(item.id)"><i class="fas fa-trash"></i></a>
                                     </td>

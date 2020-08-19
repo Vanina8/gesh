@@ -127,7 +127,6 @@
                         </div>
                         </div>
                 <!-- Sign up button -->
-                <!-- <input  class="btn btn-outline-info btn-rounded btn-block my-4  waves-effect " type="submit" value="Registrarse"> -->
                 <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect " type="submit">Registrarse</button>
                 <hr>
             </form>

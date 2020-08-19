@@ -1,6 +1,19 @@
 <?php   include '../includes/header.php';
 
-        include "../includes/menu.php";
+        @session_start();
+        if($_SESSION['rol']=='Administrador'){
+
+                include "../includes/menucompleto.php";
+
+        }else if($_SESSION['rol']=='Coordinador'){
+
+                include "../includes/menucoordinadores.php";
+
+        }else if($_SESSION['rol']=='Profesor'){
+
+                include "../includes/menuprofesores.php";
+        }
+
  ?>
 
 <div class="row container-fluid">
@@ -13,17 +26,24 @@
                 <h5 class=" info-color white-text text-center py-4">
                     <strong>Registro de Asignaturas</strong>
                 </h5>
-
-      
                 <!--Card content-->
                 <div class="card-body px-lg-5 pt-0">
 
                     <!-- Form -->
                     <form class="text-center" style="color: #757575;"  id="formAsignatura" autocomplete="off" @submit.prevent="registroAsignatura">
+
+                        <div class="form-row">                
+                                <!-- Codigo -->
+                            <div class="md-form text-center container-fluid col-5">
+                                <input type="text" id="materialRegisterFormCodigo" class="form-control" required  name="cod_asignatura" v-model="codigo_asig"  autofocus>
+                                <label for="materialRegisterFormEmail">Código de asignatura</label>
+                            </div>
+                        </div>
+
                         <div class="form-row">
                                 <!-- Nombre -->
                                 <div class="md-form text-center container-fluid col-5">
-                                    <input type="text" id="materialRegisterFormFirstName" class="form-control" required  name="nombre" value="" pattern=".{6,}]" autofocus>
+                                    <input type="text" id="materialRegisterFormFirstName" class="form-control" required  name="nombre" value="" pattern=".{6,}]" >
                                     <label for="materialRegisterFormFirstName">Nombre</label>
                                 </div>
                         </div>
@@ -38,16 +58,7 @@
                                             {{ option.nombre }}
                                         </option>
                                     </select>
-                                    <!-- <span> {{ selected }}</span> -->
                                 </div>
-                        </div>
-
-                        <div class="form-row">                
-                                <!-- Codigo -->
-                            <div class="md-form text-center container-fluid col-5">
-                                <input type="text" id="materialRegisterFormCodigo" class="form-control" required   name="cod_asignatura"  value="">
-                                <label for="materialRegisterFormEmail">Código de asignatura</label>
-                            </div>
                         </div>
 
                         <div class="form-row container-fluid justify-content-center">
@@ -55,8 +66,7 @@
                             <div class="row d-flex col-7 ">      
                                 <div class="md-form  pb-1 mb-0 col-4 justify-content-center col-6">
                                         <label for="defaultInline1" class="pl-2 ml-0 justify-content-center ">Estado</label>  
-                                        <input type="checkbox" id="defaultInline1" v-model="estadoEtiAsig" class="form-control pl-1 bg-primary " name='estado' value='{{estadoEtiAsig}' style="margin-left: 50px; width: 50px; height: 30px; background-color: rgba(0,0,255,0.1);" >
-
+                                        <input type="checkbox" id="defaultInline1" v-model="estadoEtiAsig" class="form-control pl-1 bg-primary " name='estado'  style="margin-left: 50px; width: 50px; height: 30px; background-color: rgba(0,0,255,0.1);"  >
                                 </div>        
                                 <div class="text-left pt-4 pl-2 ml-0 col-6">
                                     <small id="materialRegisterFormPhoneHelpBlock" class="form-text text-muted mb-5 mt-0 pt-0" v-if="estadoEtiAsig == true">

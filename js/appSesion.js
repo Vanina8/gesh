@@ -30,6 +30,7 @@ const app = new Vue({
         sesionesCG:[],
         dataSesion:[],  
         idHorario: -1,
+        mostrarmenu:''
     },
     created(){
         this.getTitulosYear();

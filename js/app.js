@@ -59,7 +59,9 @@ const app = new Vue({
       
         lenghtAsig:'',
         fin:'',
-        inicio:''
+        inicio:'',
+        codigo_asig:''
+        
         
     },
     created(){
@@ -86,12 +88,12 @@ const app = new Vue({
           return this.listarPro.filter((filtro)=>{
                   return filtro.nombres.toUpperCase().match(this.buscar.toUpperCase()) || filtro.apellidos.toUpperCase().match(this.buscar.toUpperCase()) || filtro.dni.toUpperCase().match(this.buscar.toUpperCase())
           });
-      }, 
+        }, 
 
         datosFiltradosAsig(){
-          console.log()
+        
             return this.listarAsig.filter((filtro)=>{
-                    return filtro.nombre.toUpperCase().match(this.buscarAsig.toUpperCase()) || filtro.titulo.toUpperCase().match(this.buscarAsig.toUpperCase()) || filtro.estado.toString().match(this.buscarAsig.toUpperCase()) 
+                    return filtro.nombre.toUpperCase().match(this.buscarAsig.toUpperCase()) || filtro.titulo.toUpperCase().match(this.buscarAsig.toUpperCase()) || filtro.codigo.toUpperCase().match(this.buscarAsig.toUpperCase()) || filtro.estado.toUpperCase()==this.buscarAsig.toUpperCase() 
             });
         },
 
@@ -102,7 +104,7 @@ const app = new Vue({
         },
         datosFiltradosAsigG(){
           return this.listarAsig.filter((filtro)=>{
-            return filtro.nombre.toUpperCase().match(this.buscarAsig.toUpperCase()) 
+            return filtro.nombre.toUpperCase().match(this.buscarAsig.toUpperCase()) && filtro.estado == 'activo'
           });
         },
         datosFiltradosDesA(){
@@ -198,25 +200,32 @@ const app = new Vue({
           },
 
           registroAsignatura() {
-           
+
+              if(this.codigoAsigFiltrado().length>0){
+                swal.fire('Error código ya existe', 'El código debe ser único', 'fail');
+                return;
+              }
+
               const form = document.getElementById("formAsignatura")
               axios
                 .post("../api/Registro/asignatura.php", new FormData(form))
                 .then(res => {
                   this.respuesta = res.data      
                
-                if (this.respuesta.trim() == "success") {
+                    if (this.respuesta.trim() == "success") {
 
-                   swal.fire('Asignatura registrada', '', 'success')
-                   location.href = '../principal/asignatura.php'
-                
-                } else {
-
-                    swal.fire('Error al registrar ', ''+this.respuesta, 'fail')
-
-                }
-
+                      swal.fire('Asignatura registrada', ''+this.respuesta, 'success')
+                      location.href = '../principal/asignatura.php'
+                    
+                    } else {
+                        swal.fire('Error al registrar ', ''+this.respuesta, 'fail')
+                    }
               })
+          },
+          codigoAsigFiltrado(){
+            return this.listarAsig.filter((filtro)=>{
+              return filtro.codigo.toUpperCase().match(this.codigo_asig.toUpperCase()) 
+            })
           },
           registroTitulo() {
 
@@ -365,7 +374,7 @@ const app = new Vue({
                 }
             })
           },
-          eliminarAsignatura(id){
+          eliminarAsignatura(id, codigo){
             swal.fire({
                 title:'Seguro que deseas eliminar el registro',
                 text:'Al eliminarlo no podras recuperarlo',
@@ -377,11 +386,14 @@ const app = new Vue({
             })
             .then((aceptar)=>{
                 if (aceptar.value) {
-                    axios.get('http://localhost/ghpV01/api/crud/eliminarAsignatura.php?id=' + id )
+                    axios.get('http://localhost/ghpV01/api/crud/eliminarAsignatura.php?id=' + id +'&codigo='+ codigo)
                     .then((res) =>{
-                        if (res.data.trim() == 'success') {
-                            swal.fire('Asignatura eliminado')
+                      this.respuesta= res.data
+                        if (this.respuesta.trim() == 'success') {
+                          
+                            swal.fire('Asignatura eliminada', ' ', 'success')
                             location.href = '../principal/buscarAsig.php'
+                           
                         }else{
                             swal.fire('Falló', 'Asignatura no eliminado', 'fail')
                         }
@@ -406,7 +418,9 @@ const app = new Vue({
                     axios.get('http://localhost/ghpV01/api/crud/eliminarTramo.php?id=' + id )
                     .then((res) =>{
                      if (res.data.trim() == 'success') {
+                         swal.fire('Eliminado', '', 'success')
                          location.href = '../principal/tramos.php'
+                      
                      }else{
                         swal.fire('Falló','Tramo no eliminado', 'fail')
                      }
@@ -466,42 +480,42 @@ const app = new Vue({
             });             
            },
         
-           selectAsignatura($itemAsig, $index, $estado){
+          //  selectAsignatura($itemAsig, $index, $estado){
                
-             var x =document.getElementsByClassName("cambioColor6");              
-             var i;
+          //    var x =document.getElementsByClassName("cambioColor6");              
+          //    var i;
 
-             for (i = 0; i < 2; i++) {
-               if(selectedAsigSesi[i]==""){
-                  selectedAsigSesi[i]=$index;
-               }else{
-                  selectedAsigSesi[i]=$index;
-                  x[$index].classList.remove('btn-info');
-               }
-             }
-           },
+          //    for (i = 0; i < 2; i++) {
+          //      if(selectedAsigSesi[i]==""){
+          //         selectedAsigSesi[i]=$index;
+          //      }else{
+          //         selectedAsigSesi[i]=$index;
+          //         x[$index].classList.remove('btn-info');
+          //      }
+          //    }
+          //  },
 
-           selectAula($idaula){
+          //  selectAula($idaula){
 
-             if(!this.aulaEncendida){
-                aulasConSesiones=getSesionesAulas();
-                var i;
-                for (i =0; i<this.numeroDia.length; i++){
-                    for (item in aulasConSesiones){
-                      if(item.id_aula == $idaula && item.id_tramo == this.idTramo[i] && item.dia == this.numeroDia[i] ){
-                        this.aulaEncendida=false;
-                        swal.fire("Aula Ocupada", ""+datosFiltradosSesion(item.id_sesion).toString, "success")
+          //    if(!this.aulaEncendida){
+          //       aulasConSesiones=getSesionesAulas();
+          //       var i;
+          //       for (i =0; i<this.numeroDia.length; i++){
+          //           for (item in aulasConSesiones){
+          //             if(item.id_aula == $idaula && item.id_tramo == this.idTramo[i] && item.dia == this.numeroDia[i] ){
+          //               this.aulaEncendida=false;
+          //               swal.fire("Aula Ocupada", ""+datosFiltradosSesion(item.id_sesion).toString, "success")
 
-                        return 
-                      }
-                    }  
-                }
-                this.aulaEncendida= true;
-                var x = document.getElementsByClassName("cambioColorA");
-                x[$index].classList.add('btn-danger');
-                x[$index].classList.remove('btn-info');
-              }
-          },
+          //               return 
+          //             }
+          //           }  
+          //       }
+          //       this.aulaEncendida= true;
+          //       var x = document.getElementsByClassName("cambioColorA");
+          //       x[$index].classList.add('btn-danger');
+          //       x[$index].classList.remove('btn-info');
+          //     }
+          // },
 
         
            RegistroGrupoAsignaAsi(){
@@ -520,7 +534,7 @@ const app = new Vue({
   
                   } else {
   
-                      swal.fire('Error al registrar asignación', ''+this.respuesta, 'fail')    
+                      swal.fire('Error al registrar asignación', '', 'fail')    
                   }
               })             
           },
@@ -564,7 +578,7 @@ const app = new Vue({
   
                   } else {
   
-                      swal.fire('Error al registrar asignación', ''+this.respuesta, 'fail')    
+                      swal.fire('Error al registrar asignación', '', 'fail')    
                   }
               })             
 

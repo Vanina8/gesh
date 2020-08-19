@@ -1,4 +1,6 @@
 <?php @session_start();
-session_destroy();
-header("location:../index.php");
+echo ' lo que tienen las variables de sesion son:';
+var_dump($_SESSION);
+ session_destroy();
+// header("location:../index.php");
 ?>
