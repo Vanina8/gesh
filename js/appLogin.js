@@ -87,7 +87,9 @@ const app = new Vue({
             axios.post('../api/login/login.php', new FormData(form))
             .then( res =>{
             this.respuesta = res.data
-            if (res.data == 'success') {           
+            if (res.data == 'success') {        
+              
+              
                 location.href = '../principal'
             } else {
                 swal.fire('Usuario y/o contraseña incorrectos')

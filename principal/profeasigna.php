@@ -1,5 +1,17 @@
 <?php   include '../includes/header.php';
-        include "../includes/menu.php";
+        @session_start();
+        if($_SESSION['rol']=='Administrador'){
+
+                include "../includes/menucompleto.php";
+
+        }else if($_SESSION['rol']=='Coordinador'){
+
+                include "../includes/menucoordinadores.php";
+
+        }else if($_SESSION['rol']=='Profesor'){
+
+                include "../includes/menuprofesores.php";
+        }
 ?>
  
   <form   class="form-inline active-cyan-3 active-cyan-4 px-2 pt-4"  style="color: #757575;"  id="formProfeAsigna" autocomplete="off" @submit.prevent="RegistroProfeAsignaAsi">                              

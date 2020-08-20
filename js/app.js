@@ -480,44 +480,6 @@ const app = new Vue({
             });             
            },
         
-          //  selectAsignatura($itemAsig, $index, $estado){
-               
-          //    var x =document.getElementsByClassName("cambioColor6");              
-          //    var i;
-
-          //    for (i = 0; i < 2; i++) {
-          //      if(selectedAsigSesi[i]==""){
-          //         selectedAsigSesi[i]=$index;
-          //      }else{
-          //         selectedAsigSesi[i]=$index;
-          //         x[$index].classList.remove('btn-info');
-          //      }
-          //    }
-          //  },
-
-          //  selectAula($idaula){
-
-          //    if(!this.aulaEncendida){
-          //       aulasConSesiones=getSesionesAulas();
-          //       var i;
-          //       for (i =0; i<this.numeroDia.length; i++){
-          //           for (item in aulasConSesiones){
-          //             if(item.id_aula == $idaula && item.id_tramo == this.idTramo[i] && item.dia == this.numeroDia[i] ){
-          //               this.aulaEncendida=false;
-          //               swal.fire("Aula Ocupada", ""+datosFiltradosSesion(item.id_sesion).toString, "success")
-
-          //               return 
-          //             }
-          //           }  
-          //       }
-          //       this.aulaEncendida= true;
-          //       var x = document.getElementsByClassName("cambioColorA");
-          //       x[$index].classList.add('btn-danger');
-          //       x[$index].classList.remove('btn-info');
-          //     }
-          // },
-
-        
            RegistroGrupoAsignaAsi(){
 
             const form = document.getElementById("formGrupoAsigna");
@@ -543,11 +505,13 @@ const app = new Vue({
                   title:'Seguro que deseas eliminar el registro',
                   text:'Al eliminarlo no podras recuperarlo',
                   icon:'warning',
-                  buttons:true,
-                  dangerMode:true,
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                 confirmButtonText: 'Si, bórralo!'
               })
               .then((aceptar)=>{
-                  if (aceptar) {
+                  if (aceptar.value) {
                       axios.get('http://localhost/ghpV01/api/crud/eliminargrupoasigna.php?id=' + id )
                       .then(res =>{
                       if (res.data.trim() == 'success') {
@@ -589,11 +553,13 @@ const app = new Vue({
                 title:'Seguro que deseas eliminar el registro',
                 text:'Al eliminarlo no podras recuperarlo',
                 icon:'warning',
-                buttons:true,
-                dangerMode:true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+               confirmButtonText: 'Si, bórralo!'
             })
             .then((aceptar)=>{
-                if (aceptar) {
+                if (aceptar.value) {
                     axios.get('http://localhost/ghpV01/api/crud/eliminarProfeAsig.php?id=' + id )
                     .then(res =>{
                         if (res.data.trim() == 'success') {

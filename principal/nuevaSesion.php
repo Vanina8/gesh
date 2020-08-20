@@ -57,9 +57,6 @@
         <input type="hidden" name="selectedYear" v-model='selectedYear'>
         <input type="hidden" name="idHorario" v-model='idHorario'>
 
-        <!-- <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="button" v-on:click='buscaNuevo'>Empezar</button> -->
-        <!-- Grupo: {{selectedIdGrupo}} Curso: {{selectedYear}} Semestre: {{selectedSem}} -->
-
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-5" type="button" data-toggle="modal" data-target="#modalVisualiza" v-on:click='verHorario()'>Visualizar</button>
         <button class="btn  blue-gradient btn-md my-2 my-sm-0 ml-3" type="submit">Registrar</button>
 

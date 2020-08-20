@@ -1,36 +1,44 @@
 const app = new Vue({
     el:'#app',
     data:{
-        selectedIdGrupo: 1,    // id del grupo para registrar la sesion
-        grupos:[],
+
+        selectedIdGrupo: 1,    // id del grupo para registrar la sesion       
         selectedSem:'',        // el semestre del horario
+        selectedYear:'',       // Año del horario a registrar
         semestres: ['1', '2'],
         mostrarOpciones:false,
+        titulosYear:[],
+        grupos:[],
         tramoshorario:[],
-        aulas:[],
-        selectedAsig: null,       // id de asignatura para registrar la sesion
         profeAsig:[],       
+        aulas:[],
+        sesionesCG:[],
+        sequeda:[],
+      
         estadoLunes:[],
         estadoMartes:[],
         estadoMiercoles:[],
         estadoJueves:[],
         estadoViernes:[],        
+
+        numeroDia:[],          // numeros de dia que debe tomarse para guardar la sesion
+        idTramo:[],            // numeros de tramos que se deben tomar al guardar la sesion
+
+        selectedAsig: null,       // id de asignatura para registrar la sesion
+
         aulaEncendida:false,
         idaulaEncendida:'',    // este es el id de aula que debe tomarse al momento de registrar la sesion
         indexAulaEncendida:'', // para revisar antes de registrar que el boton no este desactivado 
-        numeroDia:[],          // numeros de dia que debe tomarse para guardar la sesion
-        idTramo:[],            // numeros de tramos que se deben tomar al guardar la sesion
-        estadoBtnAula:false,
-        sequeda:[],
+
         profeEncendido:false,
         idProfeEncendido:'',   //este es el id del profesor que debe tomarse al momento de registrar la sesion
         indexProfeEncendido:'', // para revisar antes de registrar que el boton no este desactivado por siaca, no he comprobado que pueda darse el caso.
-        titulosYear:[],
-        selectedYear:'',       // Año del horario a registrar
-        sesionesCG:[],
+
+        // estadoBtnAula:false,
+     
         dataSesion:[],  
         idHorario: -1,
-        mostrarmenu:''
+        // mostrarmenu:''
     },
     created(){
         this.getTitulosYear();
@@ -271,13 +279,15 @@ const app = new Vue({
             }
             return false;
           },
-          eliminaTodosElemenDiayTramo(){
-              var auxD, auxT ;
-              auxD = numeroDia;
-              auxT= idTramo;
-              for(indice in auxD ){
-                this.eliminaDiaTramoEncendido(auxD[indice], auxT[indice]);
-              }
+          limpiaDiayTramo(){
+
+            this.eliminaDiayTramo(0, this.numeroDia.length);
+              // var auxD, auxT ;
+              // auxD = numeroDia;
+              // auxT= idTramo;
+              // for(indice in auxD ){
+              //   this.eliminaDiaTramoEncendido(auxD[indice], auxT[indice]);
+              // }
           },
 
           eliminaDiaTramoEncendido($ndia,$tramo){
@@ -288,8 +298,12 @@ const app = new Vue({
                   pos=i;
                 }
             }
-            this.numeroDia.splice(pos, 1);
-            this.idTramo.splice(pos, 1);
+            this.eliminaDiayTramo(pos, 1);
+          },
+
+          eliminaDiayTramo($pos, $cantidad){
+            this.numeroDia.splice($pos, $cantidad);
+            this.idTramo.splice($pos, $cantidad);
           },
 
           revisaEstadoAula(){           
@@ -313,6 +327,13 @@ const app = new Vue({
                     }            
                  }                       
           },
+          iniciaBotonesAula(){
+            for(i = 0; i < this.aulas.length; i++){                      
+              var x = document.getElementById(i);
+              this.apagarBoton('cambioColorA', i);
+            }            
+          },
+
           estadoAulas($id_aula, $dia, $id_tramo){
 
             var i;
@@ -367,6 +388,12 @@ const app = new Vue({
                 }            
              }    
           },
+          iniciaBotonesProfe(){
+            for(i = 0; i < this.profeAsig.length; i++){                      
+              var x = document.getElementById(this.profeAsig.id_profe*1000);
+              this.apagarBoton('cambioColorP', i);
+            }            
+          },
           registraSesion(){
                if(!this.hayDiayTramo()){
                    swal.fire(' Falta un dato por lo menos', 'Elija al menos un tramo de un día', 'fail');
@@ -401,6 +428,9 @@ const app = new Vue({
                       swal.fire('No se pudo registrar la sesión', ''+res.data)
                   }                  
               })
+              this.limpiaDiayTramo();
+              this.limpiaAula();
+              this.limpiaProfe();
 
               // Debe haber por lo menos un elemento en el array numeroDias
               // No debe estar vacia la varible que guarda la seleccion de asignatura
@@ -412,6 +442,16 @@ const app = new Vue({
 
               // las otras tablas de indices con sesion estan en veremos, no parecen ser necesarias
 
+          },
+          limpiaProfe(){
+            this.profeEncendido= false;
+            this.idProfeEncendido='';   
+            this.indexProfeEncendido='';
+          },
+          limpiaAula(){
+            this.aulaEncendida=false;
+            this.idaulaEncendida='';   
+            this.indexAulaEncendida=''; 
           },
           eliminaSesion($idsesion){
             
@@ -578,10 +618,14 @@ const app = new Vue({
           },
       
           reiniciaPanel(){
-            this.eliminaDiaTramoEncendido();
+            this.limpiaDiayTramo();
             this.iniciaTablaDias();
-            this.revisaEstadoAula();
-            this.revisaEstadoProfe();
+            this.iniciaBotonesAula();
+            this.iniciaBotonesProfe();
+            this.limpiaAula();
+            this.limpiaProfe();
+            // this.revisaEstadoAula();
+            // this.revisaEstadoProfe();
           },
           ocupadoBoton($clases, $index){ // boton ocupado
             var x = document.getElementsByClassName($clases);

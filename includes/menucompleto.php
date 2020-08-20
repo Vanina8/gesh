@@ -97,9 +97,9 @@
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="tramos.php">Tramos</a>
             <a class="dropdown-item" href="nuevaSesion.php">Nuevo</a>
-            <a class="dropdown-item" href="horario.php">Consultas</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Exportar a Excel</a>
+            <a class="dropdown-item" href="horario.php">Consultas</a>
+
           </div>
 
         </li> 
